@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Loader2, AtSign } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ArrowRight, AtSign, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/format';
+import { springSnap } from '@/lib/motion';
 
 interface Props {
   initialValue?: string;
@@ -10,6 +12,10 @@ interface Props {
 
 const VALID = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 
+/**
+ * Floating "Command Bar" — a single rounded-2xl surface that contains the @
+ * affordance, a borderless mono input, and a sharp slate primary action.
+ */
 export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
@@ -34,15 +40,19 @@ export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
 
   return (
     <form onSubmit={submit} className="w-full">
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...springSnap, delay: 0.25 }}
         className={cn(
-          'group relative flex items-center gap-2 rounded-2xl border bg-app-surface px-4 py-3 transition-all',
-          error
-            ? 'border-app-danger/60 ring-2 ring-app-danger/20'
-            : 'border-app-border focus-within:border-app-accent focus-within:ring-2 focus-within:ring-app-accent/20',
+          'relative z-10 flex items-center gap-1.5 rounded-2xl bg-white p-2 transition-shadow',
+          'shadow-cmd hover:shadow-[0_12px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.06)]',
+          error && 'ring-2 ring-red-200',
         )}
       >
-        <AtSign className="h-5 w-5 shrink-0 text-app-muted" aria-hidden />
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-app-surface text-app-muted">
+          <AtSign className="h-4 w-4" />
+        </div>
         <input
           type="text"
           inputMode="text"
@@ -58,28 +68,30 @@ export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
             if (error) setError(null);
           }}
           aria-label="GitHub username"
-          className="flex-1 bg-transparent text-lg text-app-primary placeholder:text-app-subtle focus:outline-none"
+          className="h-12 flex-1 bg-transparent px-1 font-mono text-lg text-app-primary outline-none placeholder:text-app-subtle"
         />
         <button
           type="submit"
           disabled={busy}
           className={cn(
-            'inline-flex h-9 items-center gap-1.5 rounded-xl bg-app-accent px-3 text-sm font-medium text-white transition-all',
-            'hover:bg-app-accent-hover active:scale-[0.98] disabled:opacity-60',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-app-bg',
+            'inline-flex h-12 items-center gap-1.5 rounded-xl bg-app-primary px-5 text-sm font-medium text-white transition-transform',
+            'hover:bg-black hover:scale-[0.98] active:scale-[0.96] disabled:opacity-80',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
           )}
         >
           {busy ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Compiling…
+            </>
           ) : (
             <>
-              Generate <ArrowRight className="h-4 w-4" />
+              Compile PDF <ArrowRight className="h-4 w-4" />
             </>
           )}
         </button>
-      </div>
+      </motion.div>
       {error && (
-        <p role="alert" className="mt-2 text-sm text-app-danger">
+        <p role="alert" className="mt-2 text-center text-sm text-app-danger">
           {error}
         </p>
       )}

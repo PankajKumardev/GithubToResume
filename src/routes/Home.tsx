@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, KeyRound, ShieldCheck, Sparkles, X } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { KeyRound, ShieldCheck, X } from 'lucide-react';
 import { UsernameInput } from '@/components/UsernameInput';
 import { TokenDialog } from '@/components/TokenDialog';
+import { MockupFan } from '@/components/MockupFan';
 import { useTokenStore } from '@/store/tokenStore';
 import { usePrefsStore } from '@/store/prefsStore';
+import { springSoft } from '@/lib/motion';
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -12,50 +15,80 @@ export default function Home() {
   const { recent, clearRecent } = usePrefsStore();
 
   return (
-    <div className="relative flex min-h-screen flex-1 flex-col items-center justify-center overflow-hidden bg-app-bg px-4 py-16">
-      <div className="bg-grid pointer-events-none absolute inset-0 opacity-50" aria-hidden />
-      <div className="relative z-10 w-full max-w-2xl">
-        <div className="mb-6 flex items-center justify-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-app-surface px-3 py-1 text-xs text-app-muted">
-            <Sparkles className="h-3 w-3 text-app-accent" /> Vector PDF · 100% client-side
-          </span>
-        </div>
-        <h1 className="text-balance text-center text-4xl font-semibold tracking-tight text-app-primary sm:text-5xl">
-          Turn your GitHub into a{' '}
-          <span className="bg-gradient-to-r from-app-accent to-sky-300 bg-clip-text text-transparent">
-            beautiful résumé.
-          </span>
-        </h1>
-        <p className="mt-4 text-center text-base text-app-muted">
-          Type a username, pick a theme, download a sharp printable PDF. No servers, no signup, no
-          tracking.
-        </p>
+    <div className="relative flex min-h-screen flex-1 flex-col bg-app-bg">
+      {/* Subtle ambient cobalt glow at the very top — opacity dialled way down */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-[-20%] h-[480px] opacity-[0.05]"
+        style={{
+          background:
+            'radial-gradient(closest-side, #0066FF 0%, rgba(0,102,255,0) 70%)',
+        }}
+      />
 
-        <div className="mt-10">
-          <UsernameInput />
+      <main className="relative z-10 flex flex-1 flex-col items-center px-4 pb-32 pt-32">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
+          className="flex flex-col items-center gap-3"
+        >
+          <motion.span
+            variants={fadeUpVariant}
+            className="inline-flex items-center gap-2 rounded-full border border-app-border bg-white px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-app-muted shadow-soft"
+          >
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-app-accent" />
+            Vector PDF · 100% client-side
+          </motion.span>
+
+          <motion.h1
+            variants={fadeUpVariant}
+            className="mt-4 max-w-3xl text-balance text-center text-5xl font-semibold tracking-crisp text-app-primary md:text-6xl"
+          >
+            Your GitHub.
+            <br />
+            <span className="text-app-muted">Compiled into a perfect résumé.</span>
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUpVariant}
+            className="mt-3 max-w-xl text-center text-lg text-app-muted"
+          >
+            Vector-sharp. ATS-friendly. Zero servers. Just pure client-side PDF generation.
+          </motion.p>
+        </motion.div>
+
+        {/* Command bar over the fanned mockups */}
+        <div className="relative mt-12 w-full max-w-2xl">
+          <MockupFan />
+          <div className="relative z-20">
+            <UsernameInput />
+          </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-app-muted">
+        <div className="relative z-20 mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-app-muted">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 hover:bg-white/5 hover:text-app-primary"
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 hover:bg-app-surface hover:text-app-primary"
           >
             <KeyRound className="h-3.5 w-3.5" />
             {token ? 'Manage token' : 'Add GitHub token (optional, recommended)'}
           </button>
           {token && (
-            <span className="inline-flex items-center gap-1 text-app-success">
+            <span className="inline-flex items-center gap-1 text-emerald-600">
               <ShieldCheck className="h-3.5 w-3.5" />
-              Token stored securely in local browser storage only
+              Token saved · stored only in this browser
             </span>
           )}
         </div>
 
         {recent.length > 0 && (
-          <div className="mt-10">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider text-app-muted">Recent</span>
+          <div className="relative z-20 mt-12 w-full max-w-2xl">
+            <div className="mb-2 flex items-center justify-between px-1">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-app-muted">
+                Recent
+              </span>
               <button
                 type="button"
                 onClick={clearRecent}
@@ -66,55 +99,38 @@ export default function Home() {
             </div>
             <ul className="flex flex-wrap gap-2">
               {recent.map((u) => (
-                <li key={u}>
+                <motion.li key={u} whileHover={{ y: -2 }} transition={springSoft}>
                   <Link
                     to={`/u/${encodeURIComponent(u)}`}
-                    className="group inline-flex items-center gap-1 rounded-full border border-app-border bg-app-surface px-3 py-1 text-xs text-app-primary hover:border-app-accent/50 hover:bg-white/5"
+                    className="group inline-flex items-center gap-1 rounded-full border border-app-border bg-white px-3 py-1 font-mono text-xs text-app-primary shadow-soft hover:border-app-accent/40"
                   >
                     @{u}
                     <X className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-60" />
                   </Link>
-                </li>
+                </motion.li>
               ))}
             </ul>
           </div>
         )}
 
-        <FeaturesGrid />
-      </div>
+        {/* Single line of mono "proof" tags */}
+        <div className="relative z-20 mt-20 flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.22em] text-app-muted">
+          <span>vector</span>
+          <span aria-hidden>·</span>
+          <span>ATS-friendly</span>
+          <span aria-hidden>·</span>
+          <span>~42 KB</span>
+          <span aria-hidden>·</span>
+          <span>100% client-side</span>
+        </div>
+      </main>
 
       <TokenDialog open={open} onClose={() => setOpen(false)} />
     </div>
   );
 }
 
-function FeaturesGrid() {
-  const items = [
-    {
-      title: 'True vector PDF',
-      body: 'Selectable, searchable text. Renders identically in Chrome, Safari, and Firefox.',
-    },
-    {
-      title: 'Three editorial themes',
-      body: 'Modern Serif, Swiss Minimal, and Dev Terminal. Live-switch on screen and in the PDF.',
-    },
-    {
-      title: 'Privacy by design',
-      body: 'Your PAT lives only in your browser. We post it directly to api.github.com — nowhere else.',
-    },
-  ];
-  return (
-    <ul className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
-      {items.map((it) => (
-        <li
-          key={it.title}
-          className="rounded-xl border border-app-border bg-app-surface p-4 text-left"
-        >
-          <FileText className="h-4 w-4 text-app-accent" />
-          <h3 className="mt-2 text-sm font-medium text-app-primary">{it.title}</h3>
-          <p className="mt-1 text-xs text-app-muted">{it.body}</p>
-        </li>
-      ))}
-    </ul>
-  );
-}
+const fadeUpVariant = {
+  hidden: { opacity: 0, y: 14 },
+  visible: { opacity: 1, y: 0, transition: springSoft },
+};
