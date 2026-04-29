@@ -14,18 +14,18 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
   const title = TITLES[kind];
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-app-border bg-white p-8 text-center shadow-glass">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-app-danger ring-1 ring-red-100">
-        <AlertCircle className="h-6 w-6" />
+    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-xl border border-border bg-white p-8 text-center shadow-cmd">
+      <div className="flex h-10 w-10 items-center justify-center rounded-md border border-red-200 bg-red-50 text-red-600">
+        <AlertCircle className="h-5 w-5" />
       </div>
-      <h2 className="text-lg font-semibold tracking-crisp text-app-primary">{title}</h2>
-      <p className="text-sm leading-relaxed text-app-muted">{message}</p>
+      <h2 className="text-lg font-semibold tracking-tight text-ink">{title}</h2>
+      <p className="text-sm leading-relaxed text-muted">{message}</p>
       {kind === 'user-not-found' && username && (
         <a
           href={`https://github.com/${encodeURIComponent(username)}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-app-accent hover:underline"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-ink underline-offset-2 hover:underline"
         >
           <Github className="h-3.5 w-3.5" />
           Check on github.com
@@ -35,7 +35,7 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
         {onRetry && (
           <button
             onClick={onRetry}
-            className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-white px-4 py-2 text-sm text-app-primary hover:bg-app-surface"
+            className="inline-flex items-center gap-1.5 rounded-md border border-border bg-white px-3 py-1.5 text-sm text-ink hover:bg-surface"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -44,7 +44,7 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
         {(kind === 'rate-limited' || kind === 'unauthorized') && onOpenToken && (
           <button
             onClick={onOpenToken}
-            className="inline-flex items-center gap-1.5 rounded-full bg-app-accent px-4 py-2 text-sm font-medium text-white hover:bg-app-accent-hover"
+            className="inline-flex items-center gap-1.5 rounded-md bg-ink px-3 py-1.5 text-sm font-medium text-white hover:bg-black"
           >
             <Key className="h-3.5 w-3.5" />
             Add token
@@ -52,7 +52,7 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
         )}
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-white px-4 py-2 text-sm text-app-primary hover:bg-app-surface"
+          className="inline-flex items-center gap-1.5 rounded-md border border-border bg-white px-3 py-1.5 text-sm text-ink hover:bg-surface"
         >
           <Home className="h-3.5 w-3.5" />
           Home

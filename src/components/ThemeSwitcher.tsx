@@ -1,15 +1,8 @@
 import { motion } from 'framer-motion';
-import { LayoutTemplate, Briefcase, Code2 } from 'lucide-react';
 import { themeList, type ThemeId } from '@/resume/themes';
 import { usePrefsStore } from '@/store/prefsStore';
 import { cn } from '@/lib/format';
 import { springSnap } from '@/lib/motion';
-
-const ICONS: Record<ThemeId, React.ComponentType<{ className?: string }>> = {
-  minimal: LayoutTemplate,
-  executive: Briefcase,
-  developer: Code2,
-};
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = usePrefsStore();
@@ -17,11 +10,10 @@ export function ThemeSwitcher() {
     <div
       role="tablist"
       aria-label="Theme"
-      className="relative inline-flex items-center gap-0.5 rounded-full border border-app-border bg-app-surface p-1"
+      className="relative inline-flex items-center gap-0.5 rounded-md border border-border bg-surface p-0.5"
     >
       {themeList.map((t) => {
-        const Icon = ICONS[t.id];
-        const active = theme === t.id;
+        const active = theme === (t.id as ThemeId);
         return (
           <button
             key={t.id}
@@ -30,19 +22,18 @@ export function ThemeSwitcher() {
             onClick={() => setTheme(t.id)}
             title={`${t.label} — ${t.description}`}
             className={cn(
-              'relative inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors',
-              active ? 'text-app-primary' : 'text-app-muted hover:text-app-primary',
+              'relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors',
+              active ? 'text-ink' : 'text-muted hover:text-ink',
             )}
           >
             {active && (
               <motion.span
                 layoutId="active-theme-tab"
                 transition={springSnap}
-                className="absolute inset-0 rounded-full bg-white shadow-soft ring-1 ring-app-border-strong"
+                className="absolute inset-0 rounded-md bg-white shadow-sm ring-1 ring-border"
               />
             )}
-            <Icon className="relative h-3.5 w-3.5" />
-            <span className="relative hidden md:inline">{t.label}</span>
+            <span className="relative">{t.label}</span>
           </button>
         );
       })}
