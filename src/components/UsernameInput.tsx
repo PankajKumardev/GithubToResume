@@ -1,23 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { ArrowRight, AtSign, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/format';
-import { springSnap } from '@/lib/motion';
 
 interface Props {
-  initialValue?: string;
-  autoFocus?: boolean;
+  onValueChange?: (v: string) => void;
 }
 
 const VALID = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 
-/**
- * Floating "Command Bar" — a single rounded-2xl surface that contains the @
- * affordance, a borderless mono input, and a sharp slate primary action.
- */
-export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
-  const [value, setValue] = useState(initialValue);
+/** Brutalist Swiss input — 2px primary border, no rounding, Klein Blue compile button. */
+export function UsernameInput({ onValueChange }: Props) {
+  const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
@@ -40,18 +34,14 @@ export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
 
   return (
     <form onSubmit={submit} className="w-full">
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ...springSnap, delay: 0.25 }}
+      <div
         className={cn(
-          'relative z-10 flex items-center gap-1.5 rounded-2xl bg-white p-2 transition-shadow',
-          'shadow-cmd hover:shadow-[0_12px_40px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.06)]',
-          error && 'ring-2 ring-red-200',
+          'flex w-full items-stretch border-2 bg-app-bg transition-colors',
+          error ? 'border-app-danger' : 'border-app-primary',
         )}
       >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-app-surface text-app-muted">
-          <AtSign className="h-4 w-4" />
+        <div className="flex w-12 shrink-0 items-center justify-center font-mono text-2xl text-app-muted">
+          @
         </div>
         <input
           type="text"
@@ -60,39 +50,43 @@ export function UsernameInput({ initialValue = '', autoFocus = true }: Props) {
           autoCorrect="off"
           spellCheck={false}
           autoComplete="off"
-          autoFocus={autoFocus}
+          autoFocus
           placeholder="torvalds"
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
+            onValueChange?.(e.target.value);
             if (error) setError(null);
           }}
           aria-label="GitHub username"
-          className="h-12 flex-1 bg-transparent px-1 font-mono text-lg text-app-primary outline-none placeholder:text-app-subtle"
+          className="h-16 flex-1 bg-transparent px-1 font-mono text-2xl text-app-primary outline-none placeholder:text-app-muted"
         />
         <button
           type="submit"
           disabled={busy}
           className={cn(
-            'inline-flex h-12 items-center gap-1.5 rounded-xl bg-app-primary px-5 text-sm font-medium text-white transition-transform',
-            'hover:bg-black hover:scale-[0.98] active:scale-[0.96] disabled:opacity-80',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+            'inline-flex h-16 shrink-0 items-center gap-2 px-6 font-mono text-base uppercase tracking-widest text-white transition-colors',
+            'bg-app-accent hover:bg-app-primary disabled:opacity-90',
+            'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-app-accent/40',
           )}
         >
           {busy ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Compiling…
+              <Loader2 className="h-4 w-4 animate-spin" /> Compiling
             </>
           ) : (
             <>
-              Compile PDF <ArrowRight className="h-4 w-4" />
+              Compile <ArrowRight className="h-4 w-4" />
             </>
           )}
         </button>
-      </motion.div>
+      </div>
       {error && (
-        <p role="alert" className="mt-2 text-center text-sm text-app-danger">
-          {error}
+        <p
+          role="alert"
+          className="mt-2 font-mono text-xs uppercase tracking-widest text-app-danger"
+        >
+          [ ERROR ] {error}
         </p>
       )}
     </form>

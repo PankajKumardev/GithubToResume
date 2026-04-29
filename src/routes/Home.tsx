@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { KeyRound, ShieldCheck, X } from 'lucide-react';
+import { motion, useMotionValue, animate } from 'framer-motion';
 import { UsernameInput } from '@/components/UsernameInput';
 import { TokenDialog } from '@/components/TokenDialog';
-import { MockupFan } from '@/components/MockupFan';
+import { ResumeWireframe } from '@/components/ResumeWireframe';
 import { useTokenStore } from '@/store/tokenStore';
 import { usePrefsStore } from '@/store/prefsStore';
 import { springSoft } from '@/lib/motion';
@@ -12,125 +11,144 @@ import { springSoft } from '@/lib/motion';
 export default function Home() {
   const [open, setOpen] = useState(false);
   const { token } = useTokenStore();
-  const { recent, clearRecent } = usePrefsStore();
+  const { recent } = usePrefsStore();
+  const energy = useMotionValue(0);
+
+  function bumpEnergy(value: string) {
+    const target = Math.min(1, value.length / 10);
+    animate(energy, target, { type: 'spring', stiffness: 120, damping: 18 });
+  }
 
   return (
-    <div className="relative flex min-h-screen flex-1 flex-col bg-app-bg">
-      {/* Subtle ambient cobalt glow at the very top — opacity dialled way down */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-[-20%] h-[480px] opacity-[0.05]"
-        style={{
-          background:
-            'radial-gradient(closest-side, #0066FF 0%, rgba(0,102,255,0) 70%)',
-        }}
-      />
-
-      <main className="relative z-10 flex flex-1 flex-col items-center px-4 pb-32 pt-32">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-          className="flex flex-col items-center gap-3"
-        >
-          <motion.span
-            variants={fadeUpVariant}
-            className="inline-flex items-center gap-2 rounded-full border border-app-border bg-white px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-app-muted shadow-soft"
+    <>
+      <div className="flex min-h-screen w-full flex-col overflow-hidden bg-app-bg md:h-screen md:flex-row">
+        {/* LEFT — Manifesto */}
+        <aside className="relative flex flex-col justify-between border-b border-app-border p-8 md:w-[40%] md:border-b-0 md:border-r md:p-12">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={springSoft}
+            className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-app-muted"
           >
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-app-accent" />
-            Vector PDF · 100% client-side
-          </motion.span>
+            <span>[ SYSTEM: GITHUB_TO_PDF_ENGINE ]</span>
+            <span>v0.1</span>
+          </motion.div>
 
-          <motion.h1
-            variants={fadeUpVariant}
-            className="mt-4 max-w-3xl text-balance text-center text-5xl font-semibold tracking-crisp text-app-primary md:text-6xl"
-          >
-            Your GitHub.
-            <br />
-            <span className="text-app-muted">Compiled into a perfect résumé.</span>
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUpVariant}
-            className="mt-3 max-w-xl text-center text-lg text-app-muted"
-          >
-            Vector-sharp. ATS-friendly. Zero servers. Just pure client-side PDF generation.
-          </motion.p>
-        </motion.div>
-
-        {/* Command bar over the fanned mockups */}
-        <div className="relative mt-12 w-full max-w-2xl">
-          <MockupFan />
-          <div className="relative z-20">
-            <UsernameInput />
+          {/* Massive typography block */}
+          <div className="my-12 md:my-0">
+            <motion.h1
+              initial="hidden"
+              animate="visible"
+              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
+              className="font-sans font-medium leading-[0.85] tracking-tighter text-app-primary"
+              style={{ fontSize: 'clamp(3rem, 7vw, 8rem)' }}
+            >
+              <motion.span variants={lineV} className="block">
+                Compile your
+              </motion.span>
+              <motion.span
+                variants={lineV}
+                className="block font-serif italic font-normal text-app-accent"
+              >
+                career.
+              </motion.span>
+              <motion.span variants={lineV} className="block">
+                Instantly.
+              </motion.span>
+            </motion.h1>
           </div>
-        </div>
 
-        <div className="relative z-20 mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-app-muted">
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 hover:bg-app-surface hover:text-app-primary"
+          {/* Bottom: 2-column tech grid */}
+          <motion.dl
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.4 }}
+            className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-app-border pt-6"
           >
-            <KeyRound className="h-3.5 w-3.5" />
-            {token ? 'Manage token' : 'Add GitHub token (optional, recommended)'}
-          </button>
-          {token && (
-            <span className="inline-flex items-center gap-1 text-emerald-600">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Token saved · stored only in this browser
-            </span>
-          )}
-        </div>
+            <ManifestoTile label="FORMAT" value="100% Vector PDF" />
+            <ManifestoTile label="INFRA" value="Zero Servers" />
+            <ManifestoTile label="COMPATIBILITY" value="ATS-Optimized" />
+            <ManifestoTile label="OUTPUT" value="≤ 50 KB · Searchable" />
+          </motion.dl>
+        </aside>
 
-        {recent.length > 0 && (
-          <div className="relative z-20 mt-12 w-full max-w-2xl">
-            <div className="mb-2 flex items-center justify-between px-1">
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-app-muted">
-                Recent
-              </span>
+        {/* RIGHT — Engine */}
+        <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-app-surface p-6 md:p-12">
+          {/* Background wireframe */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <ResumeWireframe energy={energy} className="text-app-border" />
+          </div>
+
+          {/* Top-right metadata corner */}
+          <div className="absolute right-6 top-6 hidden flex-col items-end gap-1 font-mono text-[10px] uppercase tracking-widest text-app-muted md:flex">
+            <span>[ STATUS: AWAITING_INPUT ]</span>
+            <span className="caret">RUNTIME</span>
+          </div>
+
+          <div className="absolute left-6 top-6 hidden items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-app-muted md:flex">
+            <span className="inline-block h-2 w-2 bg-app-accent" />
+            <span>EDITORIAL · DATA · ARCHITECTURE</span>
+          </div>
+
+          {/* Brutalist input */}
+          <div className="relative z-10 w-full max-w-lg">
+            <div className="mb-3 flex items-baseline justify-between font-mono text-[10px] uppercase tracking-widest text-app-muted">
+              <span>[ INPUT_TARGET ]</span>
+              <span>github.com/_</span>
+            </div>
+            <UsernameInput onValueChange={bumpEnergy} />
+
+            <div className="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest">
               <button
                 type="button"
-                onClick={clearRecent}
-                className="text-xs text-app-muted hover:text-app-primary"
+                onClick={() => setOpen(true)}
+                className="text-app-muted hover:text-app-accent"
               >
-                Clear
+                {token ? '[ TOKEN: STORED ]' : '[ CONFIGURE_AUTH_TOKEN ]'}
               </button>
+              <span className="text-app-muted">SHIFT+ENTER · COMPILE</span>
             </div>
-            <ul className="flex flex-wrap gap-2">
-              {recent.map((u) => (
-                <motion.li key={u} whileHover={{ y: -2 }} transition={springSoft}>
-                  <Link
-                    to={`/u/${encodeURIComponent(u)}`}
-                    className="group inline-flex items-center gap-1 rounded-full border border-app-border bg-white px-3 py-1 font-mono text-xs text-app-primary shadow-soft hover:border-app-accent/40"
-                  >
-                    @{u}
-                    <X className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-60" />
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-        )}
 
-        {/* Single line of mono "proof" tags */}
-        <div className="relative z-20 mt-20 flex items-center gap-3 font-mono text-[10.5px] uppercase tracking-[0.22em] text-app-muted">
-          <span>vector</span>
-          <span aria-hidden>·</span>
-          <span>ATS-friendly</span>
-          <span aria-hidden>·</span>
-          <span>~42 KB</span>
-          <span aria-hidden>·</span>
-          <span>100% client-side</span>
-        </div>
-      </main>
+            {recent.length > 0 && (
+              <div className="mt-8 border-t border-app-border pt-4">
+                <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-app-muted">
+                  [ RECENT ]
+                </div>
+                <ul className="flex flex-wrap gap-1.5">
+                  {recent.map((u) => (
+                    <li key={u}>
+                      <Link
+                        to={`/u/${encodeURIComponent(u)}`}
+                        className="inline-flex items-center border border-app-border bg-app-bg px-2 py-1 font-mono text-[11px] text-app-primary hover:border-app-accent hover:text-app-accent"
+                      >
+                        @{u}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
 
       <TokenDialog open={open} onClose={() => setOpen(false)} />
-    </div>
+    </>
   );
 }
 
-const fadeUpVariant = {
-  hidden: { opacity: 0, y: 14 },
+const lineV = {
+  hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: springSoft },
 };
+
+function ManifestoTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="font-mono text-[9.5px] uppercase tracking-widest text-app-muted">
+        [ {label} ]
+      </div>
+      <div className="mt-0.5 font-sans text-sm font-medium text-app-primary">{value}</div>
+    </div>
+  );
+}

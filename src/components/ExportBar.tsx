@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Check, Copy, Download, Loader2, Printer } from 'lucide-react';
+import { Check, Copy, Loader2, Printer } from 'lucide-react';
 import type { ResumeData } from '@/resume/types';
 import type { ThemeTokens } from '@/resume/themes';
 import { usePrefsStore } from '@/store/prefsStore';
@@ -14,11 +14,14 @@ interface Props {
 
 type Phase = 'idle' | 'busy' | 'done' | 'error';
 
+/**
+ * The big Klein-Blue compile bar. Sits as Row 2 of the picture-frame top
+ * area. Three states cross-fade in place: COMPILE → COMPILING → DOWNLOADED.
+ */
 export function ExportBar({ data, theme }: Props) {
-  const { paperSize, setPaperSize } = usePrefsStore();
+  const { paperSize } = usePrefsStore();
   const [phase, setPhase] = useState<Phase>('idle');
   const [errMsg, setErrMsg] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
 
   async function onDownload() {
     if (!data) return;
@@ -27,7 +30,7 @@ export function ExportBar({ data, theme }: Props) {
     try {
       await downloadResumePdf({ data, theme, paperSize });
       setPhase('done');
-      setTimeout(() => setPhase('idle'), 1600);
+      setTimeout(() => setPhase('idle'), 1800);
     } catch (err) {
       setPhase('error');
       setErrMsg(err instanceof Error ? err.message : 'Download failed');
@@ -35,112 +38,97 @@ export function ExportBar({ data, theme }: Props) {
     }
   }
 
+  return (
+    <button
+      onClick={onDownload}
+      disabled={!data || phase === 'busy'}
+      className={cn(
+        'relative flex w-full items-center justify-center gap-3 py-4 font-sans text-base font-medium uppercase tracking-widest transition-colors',
+        'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-app-accent/40',
+        phase === 'done'
+          ? 'bg-app-success text-white'
+          : phase === 'error'
+            ? 'bg-app-danger text-white'
+            : 'bg-app-accent text-white hover:bg-app-primary',
+        (!data || phase === 'busy') && 'opacity-95',
+      )}
+      title={errMsg ?? undefined}
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={phase}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.15 }}
+          className="inline-flex items-center gap-3"
+        >
+          {phase === 'busy' ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Compiling Vector PDF…
+            </>
+          ) : phase === 'done' ? (
+            <>
+              <Check className="h-4 w-4" /> Downloaded · {paperSize.toUpperCase()}
+            </>
+          ) : phase === 'error' ? (
+            <>Failed · Retry</>
+          ) : (
+            <>Download Vector PDF</>
+          )}
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+}
+
+/** Thin row of secondary actions (copy link, print, paper toggle). */
+export function SecondaryActions() {
+  const { paperSize, setPaperSize } = usePrefsStore();
+  const [copied, setCopied] = useState(false);
+
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch {
-      // ignore
+      /* ignore */
     }
   }
 
   return (
-    <div className="flex items-center gap-1.5">
-      <PaperToggle paperSize={paperSize} onChange={setPaperSize} />
-
+    <div className="flex items-center gap-4 font-mono text-[10px] uppercase tracking-widest text-app-muted">
       <button
         onClick={onCopy}
-        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-app-border bg-white px-2.5 text-xs text-app-primary hover:bg-app-surface"
+        className="inline-flex items-center gap-1 hover:text-app-accent"
         aria-label="Copy share link"
       >
-        {copied ? (
-          <Check className="h-3.5 w-3.5 text-app-success" />
-        ) : (
-          <Copy className="h-3.5 w-3.5" />
-        )}
-        <span className="hidden sm:inline">{copied ? 'Copied' : 'Share'}</span>
+        {copied ? <Check className="h-3 w-3 text-app-success" /> : <Copy className="h-3 w-3" />}
+        <span>{copied ? 'COPIED' : 'COPY URL'}</span>
       </button>
-
       <button
         onClick={() => window.print()}
-        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-app-border bg-white px-2.5 text-xs text-app-primary hover:bg-app-surface"
-        aria-label="Print"
+        className="inline-flex items-center gap-1 hover:text-app-accent"
       >
-        <Printer className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Print</span>
+        <Printer className="h-3 w-3" />
+        <span>PRINT</span>
       </button>
-
-      <button
-        onClick={onDownload}
-        disabled={!data || phase === 'busy'}
-        className={cn(
-          'relative inline-flex h-9 min-w-[180px] items-center justify-center gap-2 overflow-hidden rounded-lg px-4 text-sm font-medium transition-all',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
-          phase === 'done'
-            ? 'bg-emerald-600 text-white'
-            : phase === 'error'
-              ? 'bg-app-danger text-white'
-              : 'bg-app-primary text-white hover:bg-black',
-          (!data || phase === 'busy') && 'opacity-95',
-          'active:scale-[0.98]',
-        )}
-        title={errMsg ?? undefined}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={phase}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
-            className="inline-flex items-center gap-1.5"
-          >
-            {phase === 'busy' ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" /> Compiling Vector PDF…
-              </>
-            ) : phase === 'done' ? (
-              <>
-                <Check className="h-4 w-4" /> Downloaded
-              </>
-            ) : phase === 'error' ? (
-              <>Failed — retry</>
-            ) : (
-              <>
-                <Download className="h-4 w-4" /> Download Vector PDF
-              </>
+      <div className="ml-auto flex items-center gap-2">
+        <span className="text-app-subtle">PAPER</span>
+        {(['a4', 'letter'] as const).map((p) => (
+          <button
+            key={p}
+            onClick={() => setPaperSize(p)}
+            className={cn(
+              'hover:text-app-accent',
+              paperSize === p ? 'text-app-primary' : 'text-app-muted',
             )}
-          </motion.span>
-        </AnimatePresence>
-      </button>
-    </div>
-  );
-}
-
-function PaperToggle({
-  paperSize,
-  onChange,
-}: {
-  paperSize: 'a4' | 'letter';
-  onChange: (p: 'a4' | 'letter') => void;
-}) {
-  return (
-    <div className="hidden h-8 items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5 lg:inline-flex">
-      {(['a4', 'letter'] as const).map((p) => (
-        <button
-          key={p}
-          onClick={() => onChange(p)}
-          className={cn(
-            'rounded-md px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em]',
-            paperSize === p
-              ? 'bg-white text-app-primary shadow-soft ring-1 ring-app-border-strong'
-              : 'text-app-muted hover:text-app-primary',
-          )}
-        >
-          {p === 'a4' ? 'A4' : 'Letter'}
-        </button>
-      ))}
+          >
+            {p === 'a4' ? 'A4' : 'LETTER'}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
