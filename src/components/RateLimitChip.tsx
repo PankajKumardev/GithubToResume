@@ -23,7 +23,7 @@ export function RateLimitChip({ rateLimit }: Props) {
       role="status"
       aria-live="polite"
       className={cn(
-        'hidden items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] tabular-nums sm:inline-flex',
+        'hidden items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 font-mono text-[10.5px] tabular-nums lg:inline-flex',
         tone,
       )}
       title={`${rateLimit.remaining} of ${rateLimit.limit} GraphQL requests remaining`}
