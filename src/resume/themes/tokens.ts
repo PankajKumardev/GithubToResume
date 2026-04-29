@@ -1,4 +1,4 @@
-export type ThemeId = 'minimal' | 'executive' | 'developer';
+export type ThemeId = 'vercel' | 'linear' | 'monospace';
 
 export interface ThemeTokens {
   id: ThemeId;
@@ -32,16 +32,11 @@ export interface ThemeTokens {
     body: number;
     small: number;
   };
-  /** Hairline weight (pt) for rules and dividers. */
   rules: { weight: number };
   variant: {
-    /** A 1px subtle rule above each section title (executive). */
-    sectionDividers: boolean;
-    /** Repo names rendered in mono font (developer). */
-    monoRepoNames: boolean;
-    /** Section titles + stat labels rendered in mono (developer). */
-    monoSectionLabels: boolean;
-    /** Single-accent stepped-opacity language bar (minimal) vs spectrum colors. */
-    languageBarStyle: 'spectrum' | 'accent';
+    /** Mono fonts everywhere (monospace theme). */
+    allMono: boolean;
+    /** Tighter heading tracking (linear). */
+    tightHeadings: boolean;
   };
 }
