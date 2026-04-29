@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ResumeData } from '@/resume/types';
 import type { ThemeTokens } from '@/resume/themes';
 import { ResumeView, PAGE_WIDTH, PAGE_HEIGHT } from '@/resume/ResumeView';
-import { useElementWidth } from '@/lib/useResize';
 import { LoadingSkeleton } from './LoadingSkeleton';
 
 interface Props {
@@ -11,23 +10,24 @@ interface Props {
   loading?: boolean;
 }
 
-/**
- * Renders the on-screen "A4 illusion": the résumé is rendered at the full A4
- * pixel size (794 × 1123) inside a transform-scaled wrapper that fits the
- * available container width. The outer wrapper preserves the post-scale
- * dimensions so there is no layout shift when scaling.
- */
+/** A4-aspect canvas. Renders the résumé at full A4 px and scales it down via CSS. */
 export function ResumePreview({ data, theme, loading = false }: Props) {
-  const { ref, width } = useElementWidth<HTMLDivElement>();
+  const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
-    if (width === 0) return;
-    const next = Math.min(1, width / PAGE_WIDTH);
-    setScale(next);
-  }, [width]);
-
-  const scaledHeight = PAGE_HEIGHT * scale;
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const w = entry.contentRect.width;
+      setScale(Math.min(1, w / PAGE_WIDTH));
+    });
+    ro.observe(el);
+    setScale(Math.min(1, el.getBoundingClientRect().width / PAGE_WIDTH));
+    return () => ro.disconnect();
+  }, []);
 
   return (
     <div ref={ref} className="w-full">
@@ -35,16 +35,15 @@ export function ResumePreview({ data, theme, loading = false }: Props) {
         className="relative mx-auto"
         style={{
           width: PAGE_WIDTH * scale,
-          height: scaledHeight,
+          height: PAGE_HEIGHT * scale,
         }}
       >
         <div
-          className="origin-top-left shadow-a4 ring-1 ring-white/10 print-clean"
+          className="origin-top-left bg-white shadow-a4 ring-1 ring-black/5 print-clean"
           style={{
             width: PAGE_WIDTH,
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
-            background: 'var(--theme-bg, #fff)',
           }}
         >
           {loading || !data ? (
