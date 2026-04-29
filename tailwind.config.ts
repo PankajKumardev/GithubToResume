@@ -2,22 +2,21 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         app: {
-          bg: '#09090B',
-          surface: '#18181B',
-          'surface-2': '#1F1F23',
-          border: '#27272A',
-          'border-strong': '#3F3F46',
-          primary: '#FAFAFA',
-          muted: '#A1A1AA',
-          subtle: '#71717A',
-          accent: '#3B82F6',
-          'accent-hover': '#60A5FA',
-          success: '#22C55E',
+          bg: '#FFFFFF',
+          surface: '#F8F9FA',
+          'surface-2': '#F3F4F6',
+          border: '#E5E7EB',
+          'border-strong': '#D1D5DB',
+          primary: '#0F172A',
+          muted: '#6B7280',
+          subtle: '#9CA3AF',
+          accent: '#0066FF',
+          'accent-hover': '#3B82F6',
+          success: '#10B981',
           danger: '#EF4444',
           warning: '#F59E0B',
         },
@@ -32,30 +31,27 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Geist', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: [
+          '"Geist Mono"',
+          '"JetBrains Mono"',
+          'ui-monospace',
+          'SFMono-Regular',
+          'monospace',
+        ],
         serif: ['"IBM Plex Serif"', 'ui-serif', 'Georgia', 'serif'],
-        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
-        'theme-heading': ['var(--theme-font-heading)', 'serif'],
+        // Theme-driven fonts used inside the résumé canvas
+        'theme-heading': ['var(--theme-font-heading)', 'sans-serif'],
         'theme-body': ['var(--theme-font-body)', 'sans-serif'],
         'theme-mono': ['var(--theme-font-mono)', 'monospace'],
       },
       boxShadow: {
-        a4: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-        glow: '0 0 0 1px rgba(59,130,246,0.6), 0 0 30px rgba(59,130,246,0.25)',
+        cmd: '0 8px 30px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04)',
+        a4: '0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)',
+        soft: '0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)',
       },
-      keyframes: {
-        'fade-in': {
-          '0%': { opacity: '0', transform: 'translateY(4px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-      },
-      animation: {
-        'fade-in': 'fade-in 0.2s ease-out',
-        shimmer: 'shimmer 2s linear infinite',
+      letterSpacing: {
+        crisp: '-0.02em',
       },
     },
   },
