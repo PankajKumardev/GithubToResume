@@ -20,7 +20,7 @@ export async function urlToDataUrl(url: string): Promise<string> {
     const dataUrl = await blobToDataUrl(blob);
     cache.set(url, dataUrl);
     return dataUrl;
-  } catch (err) {
+  } catch {
     // Fallback: 1x1 transparent PNG so the PDF doesn't blow up.
     const fallback =
       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
