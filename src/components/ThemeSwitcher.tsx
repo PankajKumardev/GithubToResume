@@ -1,12 +1,14 @@
-import { Newspaper, Square, Terminal } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { LayoutTemplate, BookOpen, TerminalSquare } from 'lucide-react';
 import { themeList, type ThemeId } from '@/resume/themes';
 import { usePrefsStore } from '@/store/prefsStore';
 import { cn } from '@/lib/format';
+import { springSnap } from '@/lib/motion';
 
 const ICONS: Record<ThemeId, React.ComponentType<{ className?: string }>> = {
-  'modern-serif': Newspaper,
-  'swiss-minimal': Square,
-  'dev-terminal': Terminal,
+  minimal: LayoutTemplate,
+  editorial: BookOpen,
+  mono: TerminalSquare,
 };
 
 export function ThemeSwitcher() {
@@ -15,7 +17,7 @@ export function ThemeSwitcher() {
     <div
       role="tablist"
       aria-label="Theme"
-      className="inline-flex items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5"
+      className="relative inline-flex items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5"
     >
       {themeList.map((t) => {
         const Icon = ICONS[t.id];
@@ -28,14 +30,19 @@ export function ThemeSwitcher() {
             onClick={() => setTheme(t.id)}
             title={`${t.label} — ${t.description}`}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors',
-              active
-                ? 'bg-app-bg text-app-primary ring-1 ring-app-border-strong'
-                : 'text-app-muted hover:bg-white/5 hover:text-app-primary',
+              'relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors',
+              active ? 'text-app-primary' : 'text-app-muted hover:text-app-primary',
             )}
           >
-            <Icon className="h-3.5 w-3.5" />
-            <span className="hidden md:inline">{t.label}</span>
+            {active && (
+              <motion.div
+                layoutId="active-theme-tab"
+                transition={springSnap}
+                className="absolute inset-0 rounded-md bg-white shadow-soft ring-1 ring-app-border-strong"
+              />
+            )}
+            <Icon className="relative h-3.5 w-3.5" />
+            <span className="relative hidden md:inline">{t.label}</span>
           </button>
         );
       })}

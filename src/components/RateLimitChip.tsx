@@ -13,9 +13,9 @@ export function RateLimitChip({ rateLimit }: Props) {
   const reset = formatResetTime(rateLimit);
   const tone =
     pct < 10
-      ? 'text-app-danger border-app-danger/40 bg-app-danger/10'
+      ? 'text-app-danger border-red-200 bg-red-50'
       : pct < 30
-        ? 'text-app-warning border-app-warning/30 bg-app-warning/10'
+        ? 'text-amber-700 border-amber-200 bg-amber-50'
         : 'text-app-muted border-app-border bg-app-surface';
 
   return (
@@ -23,7 +23,7 @@ export function RateLimitChip({ rateLimit }: Props) {
       role="status"
       aria-live="polite"
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] tabular-nums',
+        'hidden items-center gap-1.5 rounded-md border px-2 py-1 font-mono text-[10.5px] tabular-nums sm:inline-flex',
         tone,
       )}
       title={`${rateLimit.remaining} of ${rateLimit.limit} GraphQL requests remaining`}

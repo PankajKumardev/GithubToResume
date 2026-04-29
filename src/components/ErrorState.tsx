@@ -14,8 +14,8 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
   const title = TITLES[kind];
 
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-app-border bg-app-surface p-8 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-app-danger/10 text-app-danger">
+    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-app-border bg-white p-8 text-center shadow-cmd">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-app-danger ring-1 ring-red-100">
         <AlertCircle className="h-6 w-6" />
       </div>
       <h2 className="text-lg font-semibold text-app-primary">{title}</h2>
@@ -35,7 +35,7 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
         {onRetry && (
           <button
             onClick={onRetry}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-app-bg px-3 py-1.5 text-sm text-app-primary hover:bg-white/5"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-white px-3 py-1.5 text-sm text-app-primary hover:bg-app-surface"
           >
             <RefreshCw className="h-3.5 w-3.5" />
             Retry
@@ -52,7 +52,7 @@ export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Pr
         )}
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-app-bg px-3 py-1.5 text-sm text-app-primary hover:bg-white/5"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-white px-3 py-1.5 text-sm text-app-primary hover:bg-app-surface"
         >
           <Home className="h-3.5 w-3.5" />
           Home

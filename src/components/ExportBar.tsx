@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Copy, Download, Loader2, Printer } from 'lucide-react';
 import type { ResumeData } from '@/resume/types';
 import type { ThemeTokens } from '@/resume/themes';
@@ -45,21 +46,25 @@ export function ExportBar({ data, theme }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <PaperToggle paperSize={paperSize} onChange={setPaperSize} />
 
       <button
         onClick={onCopy}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-app-surface px-3 py-1.5 text-xs text-app-primary hover:bg-white/5"
+        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-app-border bg-white px-2.5 text-xs text-app-primary hover:bg-app-surface"
         aria-label="Copy share link"
       >
-        {copied ? <Check className="h-3.5 w-3.5 text-app-success" /> : <Copy className="h-3.5 w-3.5" />}
+        {copied ? (
+          <Check className="h-3.5 w-3.5 text-app-success" />
+        ) : (
+          <Copy className="h-3.5 w-3.5" />
+        )}
         <span className="hidden sm:inline">{copied ? 'Copied' : 'Share'}</span>
       </button>
 
       <button
         onClick={() => window.print()}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-app-border bg-app-surface px-3 py-1.5 text-xs text-app-primary hover:bg-white/5"
+        className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-app-border bg-white px-2.5 text-xs text-app-primary hover:bg-app-surface"
         aria-label="Print"
       >
         <Printer className="h-3.5 w-3.5" />
@@ -70,33 +75,44 @@ export function ExportBar({ data, theme }: Props) {
         onClick={onDownload}
         disabled={!data || phase === 'busy'}
         className={cn(
-          'inline-flex min-w-[160px] items-center justify-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-app-bg',
+          'relative inline-flex h-9 min-w-[180px] items-center justify-center gap-2 overflow-hidden rounded-lg px-4 text-sm font-medium transition-all',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
           phase === 'done'
-            ? 'bg-app-success text-white'
+            ? 'bg-emerald-600 text-white'
             : phase === 'error'
               ? 'bg-app-danger text-white'
-              : 'bg-app-accent text-white hover:bg-app-accent-hover',
-          (!data || phase === 'busy') && 'opacity-90',
+              : 'bg-app-primary text-white hover:bg-black',
+          (!data || phase === 'busy') && 'opacity-95',
           'active:scale-[0.98]',
         )}
         title={errMsg ?? undefined}
       >
-        {phase === 'busy' ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Compiling Vector PDF…
-          </>
-        ) : phase === 'done' ? (
-          <>
-            <Check className="h-4 w-4" /> Downloaded
-          </>
-        ) : phase === 'error' ? (
-          <>Failed — retry</>
-        ) : (
-          <>
-            <Download className="h-4 w-4" /> Download PDF
-          </>
-        )}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={phase}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.15 }}
+            className="inline-flex items-center gap-1.5"
+          >
+            {phase === 'busy' ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" /> Compiling Vector PDF…
+              </>
+            ) : phase === 'done' ? (
+              <>
+                <Check className="h-4 w-4" /> Downloaded
+              </>
+            ) : phase === 'error' ? (
+              <>Failed — retry</>
+            ) : (
+              <>
+                <Download className="h-4 w-4" /> Download Vector PDF
+              </>
+            )}
+          </motion.span>
+        </AnimatePresence>
       </button>
     </div>
   );
@@ -110,15 +126,15 @@ function PaperToggle({
   onChange: (p: 'a4' | 'letter') => void;
 }) {
   return (
-    <div className="hidden items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5 lg:inline-flex">
+    <div className="hidden h-8 items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5 lg:inline-flex">
       {(['a4', 'letter'] as const).map((p) => (
         <button
           key={p}
           onClick={() => onChange(p)}
           className={cn(
-            'rounded-md px-2 py-1 text-[11px] uppercase tracking-wider',
+            'rounded-md px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em]',
             paperSize === p
-              ? 'bg-app-bg text-app-primary ring-1 ring-app-border-strong'
+              ? 'bg-white text-app-primary shadow-soft ring-1 ring-app-border-strong'
               : 'text-app-muted hover:text-app-primary',
           )}
         >
