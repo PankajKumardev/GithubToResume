@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { AlertCircle, Github, RefreshCw, Key, Home } from 'lucide-react';
 import type { ResumeErrorKind } from '@/github/client';
+import { Link } from 'react-router-dom';
 
 interface Props {
   kind: ResumeErrorKind;
@@ -10,64 +11,61 @@ interface Props {
 }
 
 export function ErrorState({ kind, message, username, onRetry, onOpenToken }: Props) {
-  const code = CODES[kind];
+  const title = TITLES[kind];
+
   return (
-    <div className="mx-auto max-w-md border border-app-primary bg-app-bg">
-      <div className="border-b border-app-primary bg-app-primary px-4 py-2 font-mono text-[11px] uppercase tracking-widest text-app-bg">
-        [ {code} ] {TITLES[kind]}
+    <div className="mx-auto flex max-w-md flex-col items-center gap-3 rounded-2xl border border-app-border bg-white p-8 text-center shadow-glass">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-app-danger ring-1 ring-red-100">
+        <AlertCircle className="h-6 w-6" />
       </div>
-      <div className="p-6 font-mono">
-        <p className="text-sm text-app-primary">{message}</p>
-        {kind === 'user-not-found' && username && (
-          <a
-            href={`https://github.com/${encodeURIComponent(username)}`}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-4 inline-block text-[11px] uppercase tracking-widest text-app-accent hover:underline"
+      <h2 className="text-lg font-semibold tracking-crisp text-app-primary">{title}</h2>
+      <p className="text-sm leading-relaxed text-app-muted">{message}</p>
+      {kind === 'user-not-found' && username && (
+        <a
+          href={`https://github.com/${encodeURIComponent(username)}`}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-app-accent hover:underline"
+        >
+          <Github className="h-3.5 w-3.5" />
+          Check on github.com
+        </a>
+      )}
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-white px-4 py-2 text-sm text-app-primary hover:bg-app-surface"
           >
-            [ CHECK ON GITHUB.COM ]
-          </a>
+            <RefreshCw className="h-3.5 w-3.5" />
+            Retry
+          </button>
         )}
-        <div className="mt-6 flex flex-wrap gap-2">
-          {onRetry && (
-            <button
-              onClick={onRetry}
-              className="border border-app-primary bg-app-bg px-3 py-1.5 text-[11px] uppercase tracking-widest hover:bg-app-surface"
-            >
-              [ RETRY ]
-            </button>
-          )}
-          {(kind === 'rate-limited' || kind === 'unauthorized') && onOpenToken && (
-            <button
-              onClick={onOpenToken}
-              className="border border-app-primary bg-app-accent px-3 py-1.5 text-[11px] uppercase tracking-widest text-white hover:bg-app-primary"
-            >
-              [ ADD TOKEN ]
-            </button>
-          )}
-          <Link
-            to="/"
-            className="border border-app-primary bg-app-bg px-3 py-1.5 text-[11px] uppercase tracking-widest hover:bg-app-surface"
+        {(kind === 'rate-limited' || kind === 'unauthorized') && onOpenToken && (
+          <button
+            onClick={onOpenToken}
+            className="inline-flex items-center gap-1.5 rounded-full bg-app-accent px-4 py-2 text-sm font-medium text-white hover:bg-app-accent-hover"
           >
-            [ HOME ]
-          </Link>
-        </div>
+            <Key className="h-3.5 w-3.5" />
+            Add token
+          </button>
+        )}
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-white px-4 py-2 text-sm text-app-primary hover:bg-app-surface"
+        >
+          <Home className="h-3.5 w-3.5" />
+          Home
+        </Link>
       </div>
     </div>
   );
 }
 
 const TITLES: Record<ResumeErrorKind, string> = {
-  'user-not-found': 'USER NOT FOUND',
-  unauthorized: 'TOKEN REJECTED',
-  'rate-limited': 'RATE LIMIT EXCEEDED',
-  network: 'NETWORK ERROR',
-  unknown: 'UNKNOWN FAILURE',
-};
-const CODES: Record<ResumeErrorKind, string> = {
-  'user-not-found': 'ERROR_404',
-  unauthorized: 'ERROR_401',
-  'rate-limited': 'ERROR_403',
-  network: 'ERROR_NET',
-  unknown: 'ERROR_500',
+  'user-not-found': 'User not found',
+  unauthorized: 'Token rejected',
+  'rate-limited': 'Rate limit exceeded',
+  network: 'Network error',
+  unknown: 'Something went wrong',
 };

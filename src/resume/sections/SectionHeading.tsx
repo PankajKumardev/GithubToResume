@@ -11,22 +11,23 @@ export function SectionHeading({
   label: string;
   className?: string;
 }) {
-  const text = formatSectionTitle(theme, label);
   return (
     <h2
       className={cn(
-        'text-[10px] font-semibold uppercase',
-        theme.bracketSectionTitles ? 'tracking-normal' : 'tracking-[0.18em]',
-        theme.topRuleSections && 'border-t pt-2',
+        'text-[10.5px] font-semibold uppercase tracking-[0.18em]',
+        theme.variant.sectionDividers && 'border-t pt-2.5',
+        theme.variant.monoSectionLabels && 'font-mono tracking-[0.12em]',
         className,
       )}
       style={{
         color: 'var(--theme-text-primary)',
-        fontFamily: 'var(--theme-font-heading)',
-        ...(theme.topRuleSections ? { borderTopColor: 'var(--theme-rule)' } : {}),
+        fontFamily: theme.variant.monoSectionLabels
+          ? 'var(--theme-font-mono)'
+          : 'var(--theme-font-heading)',
+        ...(theme.variant.sectionDividers ? { borderTopColor: 'var(--theme-rule)' } : {}),
       }}
     >
-      {text}
+      {formatSectionTitle(theme, label)}
     </h2>
   );
 }

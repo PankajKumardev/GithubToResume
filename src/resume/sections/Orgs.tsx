@@ -7,28 +7,27 @@ export function OrgsSection({ data, theme }: { data: ResumeData; theme: ThemeTok
   return (
     <section>
       <SectionHeading theme={theme} label="Organizations" />
-      <ul className="mt-2 flex flex-wrap gap-2">
+      <ul className="mt-2.5 flex flex-wrap gap-2">
         {data.organizations.map((org) => (
           <li key={org.login}>
             <a
               href={org.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 px-1.5 py-1 hover:opacity-90"
+              className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 hover:opacity-90"
               style={{
                 background: 'var(--theme-chip-bg)',
                 color: 'var(--theme-chip-text)',
-                borderRadius: 0,
               }}
               title={org.name ?? org.login}
             >
               <img
                 src={org.avatarUrl}
                 alt=""
-                className="h-5 w-5 rounded"
+                className="h-4 w-4 rounded-full"
                 crossOrigin="anonymous"
               />
-              <span className="text-[11px] font-medium">{org.name ?? org.login}</span>
+              <span className="text-[11.5px] font-medium">{org.name ?? org.login}</span>
             </a>
           </li>
         ))}

@@ -5,22 +5,22 @@ import { formatDate } from '@/lib/format';
 
 export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeTokens }) {
   const p = data.profile;
-  const isMono = theme.id === 'terminal';
   return (
     <header className="flex items-start gap-5">
       <img
         src={p.avatarUrl}
         alt={`${p.login} avatar`}
-        className="h-20 w-20 shrink-0 rounded-full object-cover ring-1"
+        className="h-20 w-20 shrink-0 rounded-full object-cover"
         style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.06)' }}
         crossOrigin="anonymous"
       />
       <div className="min-w-0 flex-1">
         <h1
-          className="truncate text-[28px] font-semibold leading-tight"
+          className="truncate text-[28px] font-bold leading-[1.05] tracking-tight"
           style={{
             fontFamily: 'var(--theme-font-heading)',
             color: 'var(--theme-text-primary)',
+            letterSpacing: '-0.02em',
           }}
         >
           {p.name ?? p.login}
@@ -29,7 +29,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
           className="mt-0.5 text-sm"
           style={{
             color: 'var(--theme-text-muted)',
-            fontFamily: isMono ? 'var(--theme-font-mono)' : 'var(--theme-font-body)',
+            fontFamily: 'var(--theme-font-mono)',
           }}
         >
           @{p.login}
@@ -100,6 +100,8 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
           </li>
         </ul>
       </div>
+      {/* placate unused warning if any */}
+      <span className="hidden">{theme.id}</span>
     </header>
   );
 }

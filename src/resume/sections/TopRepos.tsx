@@ -13,7 +13,7 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
         {data.topRepos.map((repo) => (
           <li
             key={repo.fullName}
-            className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 py-1.5"
+            className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 py-2"
             style={{ borderColor: 'var(--theme-rule)' }}
           >
             <div className="min-w-0">
@@ -21,14 +21,19 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
                 href={repo.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[12px] font-semibold hover:underline"
-                style={{ color: 'var(--theme-accent)' }}
+                className="text-[12.5px] font-semibold hover:underline"
+                style={{
+                  color: 'var(--theme-accent)',
+                  fontFamily: theme.variant.monoRepoNames
+                    ? 'var(--theme-font-mono)'
+                    : 'var(--theme-font-heading)',
+                }}
               >
                 {repo.name}
               </a>
               {repo.description && (
                 <span
-                  className="ml-2 text-[11.5px]"
+                  className="ml-2 text-[12px]"
                   style={{ color: 'var(--theme-text-muted)' }}
                 >
                   — {repo.description}
@@ -36,7 +41,7 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
               )}
             </div>
             <div
-              className="flex shrink-0 items-center gap-3 text-[11px] tabular-nums"
+              className="flex shrink-0 items-center gap-3 text-[11.5px] tabular-nums"
               style={{ color: 'var(--theme-text-muted)' }}
             >
               {repo.primaryLanguage && (

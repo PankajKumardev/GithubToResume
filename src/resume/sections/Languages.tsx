@@ -11,14 +11,14 @@ export function LanguagesSection({
 }) {
   if (data.languages.length === 0) return null;
 
-  const useAccent = theme.languageBarStyle === 'accent';
+  const useAccent = theme.variant.languageBarStyle === 'accent';
   const opacityFor = (i: number, total: number) => 1 - (i / Math.max(1, total)) * 0.55;
 
   return (
     <section>
       <SectionHeading theme={theme} label="Languages" />
       <div
-        className="mt-2 flex h-2 w-full overflow-hidden rounded-full"
+        className="mt-3 flex h-2 w-full overflow-hidden rounded-full"
         style={{ background: 'var(--theme-chip-bg)' }}
       >
         {data.languages.map((l, i) => (
@@ -34,16 +34,16 @@ export function LanguagesSection({
         ))}
       </div>
       <ul
-        className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11.5px]"
+        className="mt-2.5 flex flex-wrap gap-x-3.5 gap-y-1 text-[12px]"
         style={{ color: 'var(--theme-text-primary)' }}
       >
         {data.languages.map((l) => (
           <li key={l.name} className="inline-flex items-center gap-1.5">
             <span
-              className="inline-block h-2 w-2 rounded-full"
+              className="inline-block h-1.5 w-1.5 rounded-full"
               style={{ backgroundColor: l.color }}
             />
-            <span>{l.name}</span>
+            <span className="font-medium">{l.name}</span>
             <span style={{ color: 'var(--theme-text-muted)' }}>{l.percent}%</span>
           </li>
         ))}
