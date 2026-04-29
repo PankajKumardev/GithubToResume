@@ -5,7 +5,7 @@ import type { ThemeTokens } from '@/resume/themes';
 export function RepoCard({ repo, theme }: { repo: Repo; theme: ThemeTokens }) {
   return (
     <div
-      className="flex h-full flex-col gap-2 rounded-xl p-3.5"
+      className="flex h-full flex-col gap-2 rounded-md p-3.5"
       style={{ border: '1px solid var(--theme-rule)' }}
     >
       <div className="flex items-start justify-between gap-2">
@@ -13,10 +13,10 @@ export function RepoCard({ repo, theme }: { repo: Repo; theme: ThemeTokens }) {
           href={repo.url}
           target="_blank"
           rel="noreferrer"
-          className="truncate text-[13px] font-semibold hover:underline"
+          className="truncate text-[13px] font-semibold underline-offset-2 hover:underline"
           style={{
-            color: 'var(--theme-accent)',
-            fontFamily: theme.variant.monoRepoNames
+            color: 'var(--theme-text-primary)',
+            fontFamily: theme.variant.allMono
               ? 'var(--theme-font-mono)'
               : 'var(--theme-font-heading)',
           }}
@@ -25,7 +25,7 @@ export function RepoCard({ repo, theme }: { repo: Repo; theme: ThemeTokens }) {
         </a>
         <div
           className="flex shrink-0 items-center gap-2 text-[11px] tabular-nums"
-          style={{ color: 'var(--theme-text-muted)' }}
+          style={{ color: 'var(--theme-text-muted)', fontFamily: 'var(--theme-font-mono)' }}
         >
           <span className="inline-flex items-center gap-0.5">
             <Star className="h-3 w-3" /> {repo.stars}
@@ -45,12 +45,12 @@ export function RepoCard({ repo, theme }: { repo: Repo; theme: ThemeTokens }) {
       )}
       {repo.primaryLanguage && (
         <div
-          className="mt-auto inline-flex items-center gap-1.5 text-[11.5px]"
-          style={{ color: 'var(--theme-text-muted)' }}
+          className="mt-auto inline-flex items-center gap-1.5 text-[11px]"
+          style={{ color: 'var(--theme-text-muted)', fontFamily: 'var(--theme-font-mono)' }}
         >
           <span
-            className="inline-block h-2 w-2 rounded-full"
-            style={{ backgroundColor: repo.primaryLanguage.color }}
+            className="inline-block h-1.5 w-1.5 rounded-sm"
+            style={{ backgroundColor: 'var(--theme-text-muted)' }}
           />
           <span>{repo.primaryLanguage.name}</span>
         </div>

@@ -14,17 +14,12 @@ export function SectionHeading({
   return (
     <h2
       className={cn(
-        'text-[10.5px] font-semibold uppercase tracking-[0.18em]',
-        theme.variant.sectionDividers && 'border-t pt-2.5',
-        theme.variant.monoSectionLabels && 'font-mono tracking-[0.12em]',
+        'text-[10.5px] font-semibold uppercase tracking-[0.16em]',
         className,
       )}
       style={{
         color: 'var(--theme-text-primary)',
-        fontFamily: theme.variant.monoSectionLabels
-          ? 'var(--theme-font-mono)'
-          : 'var(--theme-font-heading)',
-        ...(theme.variant.sectionDividers ? { borderTopColor: 'var(--theme-rule)' } : {}),
+        fontFamily: 'var(--theme-font-heading)',
       }}
     >
       {formatSectionTitle(theme, label)}

@@ -9,7 +9,7 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
   return (
     <section>
       <SectionHeading theme={theme} label="Top Repositories" />
-      <ul className="mt-2 divide-y" style={{ borderColor: 'var(--theme-rule)' }}>
+      <ul className="mt-3 divide-y" style={{ borderColor: 'var(--theme-rule)' }}>
         {data.topRepos.map((repo) => (
           <li
             key={repo.fullName}
@@ -21,10 +21,10 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
                 href={repo.url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-[12.5px] font-semibold hover:underline"
+                className="text-[12.5px] font-semibold underline-offset-2 hover:underline"
                 style={{
-                  color: 'var(--theme-accent)',
-                  fontFamily: theme.variant.monoRepoNames
+                  color: 'var(--theme-text-primary)',
+                  fontFamily: theme.variant.allMono
                     ? 'var(--theme-font-mono)'
                     : 'var(--theme-font-heading)',
                 }}
@@ -41,14 +41,14 @@ export function TopReposSection({ data, theme }: { data: ResumeData; theme: Them
               )}
             </div>
             <div
-              className="flex shrink-0 items-center gap-3 text-[11.5px] tabular-nums"
-              style={{ color: 'var(--theme-text-muted)' }}
+              className="flex shrink-0 items-center gap-3 text-[11px] tabular-nums"
+              style={{ color: 'var(--theme-text-muted)', fontFamily: 'var(--theme-font-mono)' }}
             >
               {repo.primaryLanguage && (
                 <span className="inline-flex items-center gap-1">
                   <span
-                    className="inline-block h-1.5 w-1.5 rounded-full"
-                    style={{ backgroundColor: repo.primaryLanguage.color }}
+                    className="inline-block h-1.5 w-1.5 rounded-sm"
+                    style={{ backgroundColor: 'var(--theme-text-muted)' }}
                   />
                   {repo.primaryLanguage.name}
                 </span>
