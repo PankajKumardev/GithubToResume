@@ -32,16 +32,16 @@ export function makeStyles(theme: ThemeTokens) {
     avatar: {
       width: 56,
       height: 56,
-      borderRadius: 28,
+      borderRadius: 4,
     },
     headerText: { flex: 1, gap: 2 },
     name: {
       fontFamily: theme.fonts.heading,
       fontSize: t.name,
-      fontWeight: 700,
+      fontWeight: 600,
       color: c.textPrimary,
       lineHeight: 1.05,
-      letterSpacing: -0.6,
+      letterSpacing: v.tightHeadings ? -0.6 : -0.3,
     },
     login: {
       fontSize: t.small,
@@ -71,20 +71,13 @@ export function makeStyles(theme: ThemeTokens) {
 
     /* Section title */
     sectionTitle: {
-      fontFamily: v.monoSectionLabels ? theme.fonts.mono : theme.fonts.heading,
+      fontFamily: theme.fonts.heading,
       fontSize: t.section,
       fontWeight: 600,
-      letterSpacing: 1.4,
+      letterSpacing: 1.2,
       textTransform: 'uppercase',
       color: c.textPrimary,
       marginBottom: 8,
-      ...(v.sectionDividers
-        ? {
-            paddingTop: 8,
-            borderTopWidth: theme.rules.weight,
-            borderTopColor: c.rule,
-          }
-        : {}),
     },
 
     /* Stats */
@@ -95,15 +88,13 @@ export function makeStyles(theme: ThemeTokens) {
       borderTopWidth: theme.rules.weight,
       borderTopColor: c.rule,
     },
-    statBox: {
-      flex: 1,
-    },
+    statBox: { flex: 1 },
     statLabel: {
       fontSize: 6.5,
-      letterSpacing: 1.2,
+      letterSpacing: 1.0,
       textTransform: 'uppercase',
       color: c.textMuted,
-      fontFamily: v.monoSectionLabels ? theme.fonts.mono : theme.fonts.body,
+      fontFamily: theme.fonts.mono,
     },
     statValue: {
       fontFamily: theme.fonts.heading,
@@ -113,15 +104,15 @@ export function makeStyles(theme: ThemeTokens) {
       marginTop: 2,
     },
 
-    /* Languages */
+    /* Languages — strict grayscale stepped opacity (no chromatic accent). */
     langBar: {
       flexDirection: 'row',
       width: '100%',
-      height: 5,
-      borderRadius: 3,
+      height: 4,
+      borderRadius: 2,
       overflow: 'hidden',
       marginBottom: 8,
-      backgroundColor: c.chipBg,
+      backgroundColor: c.rule,
     },
     langSegment: { height: '100%' },
     legendRow: {
@@ -133,9 +124,9 @@ export function makeStyles(theme: ThemeTokens) {
     legendItem: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 3,
+      gap: 4,
     },
-    swatch: { width: 6, height: 6, borderRadius: 3 },
+    swatch: { width: 5, height: 5 },
 
     /* Repo cards */
     pinnedGrid: {
@@ -147,13 +138,13 @@ export function makeStyles(theme: ThemeTokens) {
       width: '49%',
       borderWidth: theme.rules.weight,
       borderColor: c.rule,
-      borderRadius: 6,
+      borderRadius: 4,
       padding: 8,
       gap: 4,
     },
     pinnedHeader: { flexDirection: 'row', justifyContent: 'space-between', gap: 6 },
     repoName: {
-      fontFamily: v.monoRepoNames ? theme.fonts.mono : theme.fonts.heading,
+      fontFamily: theme.fonts.heading,
       fontSize: t.body + 0.5,
       fontWeight: 600,
       color: c.accent,
@@ -164,6 +155,7 @@ export function makeStyles(theme: ThemeTokens) {
       gap: 6,
       fontSize: t.small,
       color: c.textMuted,
+      fontFamily: theme.fonts.mono,
     },
     repoDescription: {
       fontSize: t.small + 0.5,
@@ -188,6 +180,7 @@ export function makeStyles(theme: ThemeTokens) {
       gap: 8,
       fontSize: t.small,
       color: c.textMuted,
+      fontFamily: theme.fonts.mono,
     },
 
     /* Orgs */
@@ -197,9 +190,11 @@ export function makeStyles(theme: ThemeTokens) {
       alignItems: 'center',
       gap: 3,
       backgroundColor: c.chipBg,
+      borderWidth: theme.rules.weight,
+      borderColor: c.rule,
       paddingVertical: 3,
       paddingHorizontal: 6,
-      borderRadius: 999,
+      borderRadius: 4,
     },
     orgName: { fontSize: t.small, color: c.chipText, fontWeight: 500 },
 
@@ -219,7 +214,7 @@ export function makeStyles(theme: ThemeTokens) {
       fontFamily: theme.fonts.mono,
     },
 
-    link: { color: c.accent, textDecoration: 'none' },
+    link: { color: c.accent, textDecoration: 'underline' },
   });
 }
 

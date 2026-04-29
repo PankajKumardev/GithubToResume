@@ -136,9 +136,9 @@ function Languages({
   styles: ThemedStyles;
 }) {
   if (data.languages.length === 0) return null;
-
-  const useAccent = theme.variant.languageBarStyle === 'accent';
-  const opacityFor = (i: number, total: number) => 1 - (i / Math.max(1, total)) * 0.55;
+  // Strict grayscale: stepped opacities of the ink accent.
+  const opacityFor = (i: number, total: number) =>
+    Math.max(0.25, 1 - (i / Math.max(1, total)) * 0.7);
 
   return (
     <View wrap={false}>
@@ -150,16 +150,22 @@ function Languages({
             style={{
               ...styles.langSegment,
               width: `${l.percent}%`,
-              backgroundColor: useAccent ? theme.colors.accent : l.color,
-              opacity: useAccent ? opacityFor(i, data.languages.length) : 1,
+              backgroundColor: theme.colors.accent,
+              opacity: opacityFor(i, data.languages.length),
             }}
           />
         ))}
       </View>
       <View style={styles.legendRow}>
-        {data.languages.map((l) => (
+        {data.languages.map((l, i) => (
           <View key={l.name} style={styles.legendItem}>
-            <View style={{ ...styles.swatch, backgroundColor: l.color }} />
+            <View
+              style={{
+                ...styles.swatch,
+                backgroundColor: theme.colors.accent,
+                opacity: opacityFor(i, data.languages.length),
+              }}
+            />
             <Text>
               {l.name}{' '}
               <Text style={{ color: theme.colors.textMuted }}>{l.percent}%</Text>
@@ -201,7 +207,7 @@ function Pinned({
             ) : null}
             {repo.primaryLanguage ? (
               <View style={styles.repoMeta}>
-                <View style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }} />
+                <View style={{ ...styles.swatch, backgroundColor: theme.colors.textMuted }} />
                 <Text>{repo.primaryLanguage.name}</Text>
               </View>
             ) : null}
@@ -241,7 +247,7 @@ function TopRepos({
             <View style={styles.topRepoMeta}>
               {repo.primaryLanguage ? (
                 <View style={styles.repoMeta}>
-                  <View style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }} />
+                  <View style={{ ...styles.swatch, backgroundColor: theme.colors.textMuted }} />
                   <Text>{repo.primaryLanguage.name}</Text>
                 </View>
               ) : null}

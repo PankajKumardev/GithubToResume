@@ -10,17 +10,17 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
       <img
         src={p.avatarUrl}
         alt={`${p.login} avatar`}
-        className="h-20 w-20 shrink-0 rounded-full object-cover"
+        className="h-20 w-20 shrink-0 rounded-md object-cover"
         style={{ boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.06)' }}
         crossOrigin="anonymous"
       />
       <div className="min-w-0 flex-1">
         <h1
-          className="truncate text-[28px] font-bold leading-[1.05] tracking-tight"
+          className="truncate text-[28px] font-semibold leading-[1.05]"
           style={{
             fontFamily: 'var(--theme-font-heading)',
             color: 'var(--theme-text-primary)',
-            letterSpacing: '-0.02em',
+            letterSpacing: theme.variant.tightHeadings ? '-0.025em' : '-0.015em',
           }}
         >
           {p.name ?? p.login}
@@ -38,7 +38,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
           ) : null}
         </div>
         <ul
-          className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px]"
+          className="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12.5px]"
           style={{ color: 'var(--theme-text-muted)' }}
         >
           {p.location && (
@@ -56,7 +56,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
           {p.email && (
             <li className="inline-flex items-center gap-1.5">
               <Mail className="h-3.5 w-3.5" />
-              <a href={`mailto:${p.email}`} className="hover:underline">
+              <a href={`mailto:${p.email}`} className="underline-offset-2 hover:underline">
                 {p.email}
               </a>
             </li>
@@ -68,7 +68,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
                 href={p.website}
                 target="_blank"
                 rel="noreferrer"
-                className="max-w-[18ch] truncate hover:underline"
+                className="max-w-[18ch] truncate underline-offset-2 hover:underline"
               >
                 {p.website.replace(/^https?:\/\//, '')}
               </a>
@@ -81,7 +81,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
                 href={`https://twitter.com/${p.twitter}`}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:underline"
+                className="underline-offset-2 hover:underline"
               >
                 @{p.twitter}
               </a>
@@ -93,15 +93,13 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
               href={`https://github.com/${p.login}`}
               target="_blank"
               rel="noreferrer"
-              className="hover:underline"
+              className="underline-offset-2 hover:underline"
             >
               github.com/{p.login}
             </a>
           </li>
         </ul>
       </div>
-      {/* placate unused warning if any */}
-      <span className="hidden">{theme.id}</span>
     </header>
   );
 }
