@@ -62,5 +62,27 @@ else
   echo "    JetBrains Mono fonts already present, skipping."
 fi
 
+echo "==> Geist (app shell)"
+GEIST_BASE="https://raw.githubusercontent.com/vercel/geist-font/main/packages/next/dist/fonts/geist-sans"
+GEIST_FILES=(Geist-Regular.ttf Geist-Medium.ttf Geist-SemiBold.ttf)
+if need "${GEIST_FILES[@]}"; then
+  for f in "${GEIST_FILES[@]}"; do
+    curl -fsSL -o "$DEST/$f" "$GEIST_BASE/$f"
+  done
+else
+  echo "    Geist fonts already present, skipping."
+fi
+
+echo "==> Geist Mono (app shell)"
+GEISTMONO_BASE="https://raw.githubusercontent.com/vercel/geist-font/main/packages/next/dist/fonts/geist-mono"
+GEISTMONO_FILES=(GeistMono-Regular.ttf GeistMono-Medium.ttf)
+if need "${GEISTMONO_FILES[@]}"; then
+  for f in "${GEISTMONO_FILES[@]}"; do
+    curl -fsSL -o "$DEST/$f" "$GEISTMONO_BASE/$f"
+  done
+else
+  echo "    Geist Mono fonts already present, skipping."
+fi
+
 echo "==> Done. Font files in $DEST"
 ls -lh "$DEST"
