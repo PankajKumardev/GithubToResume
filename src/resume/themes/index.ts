@@ -1,16 +1,16 @@
 import type { CSSProperties } from 'react';
 import type { ThemeId, ThemeTokens } from './tokens';
-import { minimal } from './minimal';
-import { executive } from './executive';
-import { developer } from './developer';
+import { vercel } from './vercel';
+import { linear } from './linear';
+import { monospace } from './monospace';
 
 export const themes: Record<ThemeId, ThemeTokens> = {
-  minimal,
-  executive,
-  developer,
+  vercel,
+  linear,
+  monospace,
 };
 
-export const themeList: ThemeTokens[] = [minimal, executive, developer];
+export const themeList: ThemeTokens[] = [vercel, linear, monospace];
 
 export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   return {
