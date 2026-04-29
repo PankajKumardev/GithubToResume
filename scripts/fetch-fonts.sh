@@ -73,6 +73,16 @@ else
   echo "    Geist fonts already present, skipping."
 fi
 
+echo "==> Newsreader (italic disruption)"
+NEWSREADER_FILES=(Newsreader-Italic.ttf)
+if need "${NEWSREADER_FILES[@]}"; then
+  # Variable italic font from Google Fonts (single file, all weights/optical sizes).
+  curl -fsSL -o "$DEST/Newsreader-Italic.ttf" \
+    "https://raw.githubusercontent.com/google/fonts/main/ofl/newsreader/Newsreader-Italic%5Bopsz%2Cwght%5D.ttf"
+else
+  echo "    Newsreader font already present, skipping."
+fi
+
 echo "==> Geist Mono (app shell)"
 GEISTMONO_BASE="https://raw.githubusercontent.com/vercel/geist-font/main/packages/next/dist/fonts/geist-mono"
 GEISTMONO_FILES=(GeistMono-Regular.ttf GeistMono-Medium.ttf)
