@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { ChevronLeft, KeyRound, Github } from 'lucide-react';
 import { fetchResume, ResumeError } from '@/github/client';
 import { useTokenStore } from '@/store/tokenStore';
 import { usePrefsStore } from '@/store/prefsStore';
@@ -9,7 +10,7 @@ import { themes } from '@/resume/themes';
 import type { ResumeData, RateLimit } from '@/resume/types';
 import { ResumePreview } from '@/components/ResumePreview';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
-import { ExportBar, SecondaryActions } from '@/components/ExportBar';
+import { ExportBar } from '@/components/ExportBar';
 import { RateLimitChip } from '@/components/RateLimitChip';
 import { ErrorState } from '@/components/ErrorState';
 import { TokenDialog } from '@/components/TokenDialog';
@@ -46,88 +47,109 @@ export default function ResumeRoute() {
   const data: ResumeData | null = query.data?.data ?? null;
   const rateLimit: RateLimit | undefined = query.data?.rateLimit;
 
-  const status = query.isError
-    ? 'ERROR'
-    : query.isFetching || query.isLoading
-      ? 'RENDERING'
-      : 'READY';
-
   return (
-    <div className="min-h-screen bg-app-bg p-2 sm:p-4">
-      {/* Picture frame */}
-      <div className="flex min-h-[calc(100vh-1rem)] flex-col border border-app-border bg-app-surface sm:min-h-[calc(100vh-2rem)]">
-        {/* Row 1: status + identity */}
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-app-border px-4 py-2 font-mono text-[10px] uppercase tracking-widest text-app-muted">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="hover:text-app-accent">
-              [ ← HOME ]
-            </Link>
-            <span>STATUS: <span className="text-app-primary">{status}</span></span>
-            <RateLimitChip rateLimit={rateLimit} />
-          </div>
-          <div className="flex items-center gap-3">
-            <span>USER: <span className="text-app-primary">{username}</span></span>
-            <span className="hidden sm:inline">THEME: <span className="text-app-primary">{theme.label.toUpperCase()}</span></span>
+    <div className="flex min-h-screen flex-col bg-app-surface">
+      <TopBar
+        username={username}
+        avatarUrl={data?.profile.avatarUrl}
+        rateLimit={rateLimit}
+        data={data}
+        onOpenToken={() => setTokenDialogOpen(true)}
+      />
+
+      <main className="flex-1 px-4 pb-12 pt-28 sm:px-6 lg:px-8">
+        {query.isError && query.error instanceof ResumeError ? (
+          <ErrorState
+            kind={query.error.kind}
+            message={query.error.message}
+            username={username}
+            onRetry={() => query.refetch()}
+            onOpenToken={() => setTokenDialogOpen(true)}
+          />
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={springSoft}
+            className="mx-auto max-w-[820px]"
+          >
+            <ResumePreview
+              data={data}
+              theme={theme}
+              loading={query.isLoading || query.isFetching}
+            />
+          </motion.div>
+        )}
+
+        {!effectiveToken && (
+          <div className="no-print mx-auto mt-6 max-w-md rounded-2xl border border-app-border bg-white/80 p-3.5 text-center text-xs text-app-muted shadow-sm backdrop-blur">
+            <span className="font-medium text-app-primary">Tip:</span> Add a personal access
+            token to lift the anonymous 60/hr limit to 5,000/hr.{' '}
             <button
               onClick={() => setTokenDialogOpen(true)}
-              className="hover:text-app-accent"
+              className="font-medium text-app-accent hover:underline"
             >
-              {effectiveToken ? '[ TOKEN: STORED ]' : '[ CONFIGURE_AUTH_TOKEN ]'}
+              Add token →
             </button>
           </div>
-        </div>
-
-        {/* Row 2: massive download button */}
-        <ExportBar data={data} theme={theme} />
-
-        {/* Row 3: secondary actions + theme switcher */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-app-border px-4 py-2">
-          <ThemeSwitcher />
-          <SecondaryActions />
-        </div>
-
-        {/* Canvas */}
-        <main className="flex-1 px-4 py-12 sm:px-8">
-          {query.isError && query.error instanceof ResumeError ? (
-            <div className="mt-8">
-              <ErrorState
-                kind={query.error.kind}
-                message={query.error.message}
-                username={username}
-                onRetry={() => query.refetch()}
-                onOpenToken={() => setTokenDialogOpen(true)}
-              />
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={springSoft}
-              className="mx-auto max-w-[820px]"
-            >
-              <ResumePreview
-                data={data}
-                theme={theme}
-                loading={query.isLoading || query.isFetching}
-              />
-            </motion.div>
-          )}
-
-          {!effectiveToken && (
-            <div className="no-print mx-auto mt-8 max-w-md border border-app-border bg-app-bg p-3 text-center font-mono text-[11px] uppercase tracking-widest text-app-muted">
-              <span className="text-app-primary">TIP ·</span> ANONYMOUS LIMIT 60/HR.{' '}
-              <button
-                onClick={() => setTokenDialogOpen(true)}
-                className="text-app-accent hover:underline"
-              >
-                [ ADD TOKEN ]
-              </button>
-            </div>
-          )}
-        </main>
-      </div>
+        )}
+      </main>
 
       <TokenDialog open={tokenDialogOpen} onClose={() => setTokenDialogOpen(false)} />
     </div>
+  );
+}
+
+interface TopBarProps {
+  username: string;
+  avatarUrl?: string;
+  rateLimit?: RateLimit;
+  data: ResumeData | null;
+  onOpenToken: () => void;
+}
+
+function TopBar({ username, avatarUrl, rateLimit, data, onOpenToken }: TopBarProps) {
+  const { theme: themeId } = usePrefsStore();
+  const theme = themes[themeId];
+  return (
+    <header className="no-print fixed inset-x-0 top-0 z-40 border-b border-app-border bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <Link
+            to="/"
+            className="inline-flex h-9 items-center gap-1 rounded-full border border-app-border bg-white px-2.5 text-app-muted shadow-sm hover:bg-app-surface hover:text-app-primary"
+            aria-label="Home"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Link>
+          <div className="flex h-9 items-center gap-2 rounded-full border border-app-border bg-white pl-1 pr-3 shadow-sm">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt=""
+                aria-hidden="true"
+                className="h-7 w-7 rounded-full object-cover"
+              />
+            ) : (
+              <Github className="ml-2 h-4 w-4 text-app-muted" />
+            )}
+            <span className="font-mono text-sm font-medium text-app-primary">@{username}</span>
+          </div>
+          <RateLimitChip rateLimit={rateLimit} />
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeSwitcher />
+          <button
+            onClick={onOpenToken}
+            className="hidden h-9 items-center gap-1.5 rounded-full border border-app-border bg-white px-3 text-xs text-app-muted shadow-sm hover:bg-app-surface hover:text-app-primary md:inline-flex"
+            aria-label="Token settings"
+          >
+            <KeyRound className="h-3.5 w-3.5" />
+            <span>Token</span>
+          </button>
+          <ExportBar data={data} theme={theme} />
+        </div>
+      </div>
+    </header>
   );
 }

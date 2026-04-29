@@ -10,9 +10,6 @@ interface Props {
   loading?: boolean;
 }
 
-/**
- * A4-aspect canvas. Paper-tinted with an offset shadow for the Swiss frame.
- */
 export function ResumePreview({ data, theme, loading = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -35,18 +32,14 @@ export function ResumePreview({ data, theme, loading = false }: Props) {
     <div ref={ref} className="w-full">
       <div
         className="relative mx-auto"
-        style={{
-          width: PAGE_WIDTH * scale,
-          height: PAGE_HEIGHT * scale,
-        }}
+        style={{ width: PAGE_WIDTH * scale, height: PAGE_HEIGHT * scale }}
       >
         <div
-          className="origin-top-left border border-app-border shadow-offset print-clean"
+          className="origin-top-left rounded-sm bg-white shadow-a4 ring-1 ring-black/5 print-clean"
           style={{
             width: PAGE_WIDTH,
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
-            background: theme.colors.bg,
           }}
         >
           {loading || !data ? (

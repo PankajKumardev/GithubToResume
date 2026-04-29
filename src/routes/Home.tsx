@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useMotionValue, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { KeyRound, ShieldCheck, Sparkles, X } from 'lucide-react';
 import { UsernameInput } from '@/components/UsernameInput';
 import { TokenDialog } from '@/components/TokenDialog';
-import { ResumeWireframe } from '@/components/ResumeWireframe';
+import { ShowcaseCards } from '@/components/ShowcaseCards';
 import { useTokenStore } from '@/store/tokenStore';
 import { usePrefsStore } from '@/store/prefsStore';
 import { springSoft } from '@/lib/motion';
@@ -11,144 +12,149 @@ import { springSoft } from '@/lib/motion';
 export default function Home() {
   const [open, setOpen] = useState(false);
   const { token } = useTokenStore();
-  const { recent } = usePrefsStore();
-  const energy = useMotionValue(0);
-
-  function bumpEnergy(value: string) {
-    const target = Math.min(1, value.length / 10);
-    animate(energy, target, { type: 'spring', stiffness: 120, damping: 18 });
-  }
+  const { recent, clearRecent } = usePrefsStore();
 
   return (
-    <>
-      <div className="flex min-h-screen w-full flex-col overflow-hidden bg-app-bg md:h-screen md:flex-row">
-        {/* LEFT — Manifesto */}
-        <aside className="relative flex flex-col justify-between border-b border-app-border p-8 md:w-[40%] md:border-b-0 md:border-r md:p-12">
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={springSoft}
-            className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-app-muted"
-          >
-            <span>[ SYSTEM: GITHUB_TO_PDF_ENGINE ]</span>
-            <span>v0.1</span>
-          </motion.div>
+    <div className="relative flex min-h-screen w-full flex-col items-center overflow-hidden bg-app-bg px-6 pb-20 pt-32">
+      {/* Soft mesh-gradient blobs for ambient depth */}
+      <div
+        aria-hidden
+        className="glow-blob"
+        style={{
+          top: '-15%',
+          left: '-10%',
+          width: 520,
+          height: 520,
+          background: '#3B82F6',
+          opacity: 0.18,
+        }}
+      />
+      <div
+        aria-hidden
+        className="glow-blob"
+        style={{
+          top: '12%',
+          right: '-12%',
+          width: 620,
+          height: 620,
+          background: '#8B5CF6',
+          opacity: 0.18,
+        }}
+      />
+      <div
+        aria-hidden
+        className="glow-blob"
+        style={{
+          bottom: '-25%',
+          left: '20%',
+          width: 720,
+          height: 480,
+          background: '#06B6D4',
+          opacity: 0.1,
+        }}
+      />
 
-          {/* Massive typography block */}
-          <div className="my-12 md:my-0">
-            <motion.h1
-              initial="hidden"
-              animate="visible"
-              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.12 } } }}
-              className="font-sans font-medium leading-[0.85] tracking-tighter text-app-primary"
-              style={{ fontSize: 'clamp(3rem, 7vw, 8rem)' }}
+      <main className="relative z-10 flex w-full max-w-3xl flex-col items-center">
+        <motion.span
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springSoft, delay: 0.05 }}
+          className="inline-flex items-center gap-1.5 rounded-full border border-app-border bg-app-surface/70 px-3.5 py-1 text-xs font-medium text-app-muted shadow-sm backdrop-blur-md"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-app-accent" />
+          100% Client-Side Vector PDF
+        </motion.span>
+
+        <motion.h1
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+          }}
+          className="mt-8 max-w-3xl text-balance text-center text-5xl font-bold leading-[1.05] tracking-tighter text-app-primary md:text-7xl"
+        >
+          <motion.span
+            variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: springSoft } }}
+            className="block"
+          >
+            Your GitHub.
+          </motion.span>
+          <motion.span
+            variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: springSoft } }}
+            className="block bg-gradient-to-r from-app-accent via-violet-500 to-fuchsia-500 bg-clip-text text-transparent"
+          >
+            Beautifully compiled.
+          </motion.span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springSoft, delay: 0.4 }}
+          className="mt-5 max-w-xl text-center text-lg leading-relaxed text-app-muted"
+        >
+          Generate a pristine, ATS-friendly résumé from your public profile in seconds.
+          Zero servers, zero tracking.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springSoft, delay: 0.5 }}
+          className="relative z-20 mt-10 w-full max-w-2xl"
+        >
+          <UsernameInput />
+
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-app-muted">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 hover:bg-app-surface hover:text-app-primary"
             >
-              <motion.span variants={lineV} className="block">
-                Compile your
-              </motion.span>
-              <motion.span
-                variants={lineV}
-                className="block font-serif italic font-normal text-app-accent"
-              >
-                career.
-              </motion.span>
-              <motion.span variants={lineV} className="block">
-                Instantly.
-              </motion.span>
-            </motion.h1>
-          </div>
-
-          {/* Bottom: 2-column tech grid */}
-          <motion.dl
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
-            className="grid grid-cols-2 gap-x-6 gap-y-4 border-t border-app-border pt-6"
-          >
-            <ManifestoTile label="FORMAT" value="100% Vector PDF" />
-            <ManifestoTile label="INFRA" value="Zero Servers" />
-            <ManifestoTile label="COMPATIBILITY" value="ATS-Optimized" />
-            <ManifestoTile label="OUTPUT" value="≤ 50 KB · Searchable" />
-          </motion.dl>
-        </aside>
-
-        {/* RIGHT — Engine */}
-        <section className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-app-surface p-6 md:p-12">
-          {/* Background wireframe */}
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <ResumeWireframe energy={energy} className="text-app-border" />
-          </div>
-
-          {/* Top-right metadata corner */}
-          <div className="absolute right-6 top-6 hidden flex-col items-end gap-1 font-mono text-[10px] uppercase tracking-widest text-app-muted md:flex">
-            <span>[ STATUS: AWAITING_INPUT ]</span>
-            <span className="caret">RUNTIME</span>
-          </div>
-
-          <div className="absolute left-6 top-6 hidden items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-app-muted md:flex">
-            <span className="inline-block h-2 w-2 bg-app-accent" />
-            <span>EDITORIAL · DATA · ARCHITECTURE</span>
-          </div>
-
-          {/* Brutalist input */}
-          <div className="relative z-10 w-full max-w-lg">
-            <div className="mb-3 flex items-baseline justify-between font-mono text-[10px] uppercase tracking-widest text-app-muted">
-              <span>[ INPUT_TARGET ]</span>
-              <span>github.com/_</span>
-            </div>
-            <UsernameInput onValueChange={bumpEnergy} />
-
-            <div className="mt-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest">
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="text-app-muted hover:text-app-accent"
-              >
-                {token ? '[ TOKEN: STORED ]' : '[ CONFIGURE_AUTH_TOKEN ]'}
-              </button>
-              <span className="text-app-muted">SHIFT+ENTER · COMPILE</span>
-            </div>
-
-            {recent.length > 0 && (
-              <div className="mt-8 border-t border-app-border pt-4">
-                <div className="mb-2 font-mono text-[10px] uppercase tracking-widest text-app-muted">
-                  [ RECENT ]
-                </div>
-                <ul className="flex flex-wrap gap-1.5">
-                  {recent.map((u) => (
-                    <li key={u}>
-                      <Link
-                        to={`/u/${encodeURIComponent(u)}`}
-                        className="inline-flex items-center border border-app-border bg-app-bg px-2 py-1 font-mono text-[11px] text-app-primary hover:border-app-accent hover:text-app-accent"
-                      >
-                        @{u}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <KeyRound className="h-3.5 w-3.5" />
+              {token ? 'Manage token' : 'Add GitHub token (optional)'}
+            </button>
+            {token && (
+              <span className="inline-flex items-center gap-1 text-emerald-600">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Saved · stored only in this browser
+              </span>
             )}
           </div>
-        </section>
-      </div>
+
+          {recent.length > 0 && (
+            <div className="mt-8">
+              <div className="mb-2 flex items-center justify-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-app-subtle">
+                <span>Recent</span>
+                <button
+                  type="button"
+                  onClick={clearRecent}
+                  className="text-app-muted hover:text-app-primary"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+              <ul className="flex flex-wrap items-center justify-center gap-2">
+                {recent.map((u) => (
+                  <motion.li key={u} whileHover={{ y: -2 }} transition={springSoft}>
+                    <Link
+                      to={`/u/${encodeURIComponent(u)}`}
+                      className="inline-flex items-center gap-1 rounded-full border border-app-border bg-white/80 px-3 py-1 font-mono text-xs text-app-primary shadow-sm backdrop-blur-md hover:border-app-accent/30 hover:shadow"
+                    >
+                      @{u}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </motion.div>
+
+        <ShowcaseCards />
+      </main>
 
       <TokenDialog open={open} onClose={() => setOpen(false)} />
-    </>
-  );
-}
-
-const lineV = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: springSoft },
-};
-
-function ManifestoTile({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="font-mono text-[9.5px] uppercase tracking-widest text-app-muted">
-        [ {label} ]
-      </div>
-      <div className="mt-0.5 font-sans text-sm font-medium text-app-primary">{value}</div>
     </div>
   );
 }

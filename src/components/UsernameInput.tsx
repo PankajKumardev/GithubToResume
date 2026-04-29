@@ -1,16 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Github, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/format';
-
-interface Props {
-  onValueChange?: (v: string) => void;
-}
 
 const VALID = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 
-/** Brutalist Swiss input — 2px primary border, no rounding, Klein Blue compile button. */
-export function UsernameInput({ onValueChange }: Props) {
+/** Glass pill command bar — bg-white/70 + backdrop-blur-xl, rounded-full. */
+export function UsernameInput() {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -36,12 +32,12 @@ export function UsernameInput({ onValueChange }: Props) {
     <form onSubmit={submit} className="w-full">
       <div
         className={cn(
-          'flex w-full items-stretch border-2 bg-app-bg transition-colors',
-          error ? 'border-app-danger' : 'border-app-primary',
+          'flex items-center gap-1.5 rounded-full border border-white/40 bg-white/70 p-1.5 shadow-glass backdrop-blur-xl transition-shadow hover:shadow-soft',
+          error && 'ring-2 ring-red-200',
         )}
       >
-        <div className="flex w-12 shrink-0 items-center justify-center font-mono text-2xl text-app-muted">
-          @
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-app-surface text-app-muted">
+          <Github className="h-4 w-4" />
         </div>
         <input
           type="text"
@@ -55,19 +51,18 @@ export function UsernameInput({ onValueChange }: Props) {
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
-            onValueChange?.(e.target.value);
             if (error) setError(null);
           }}
           aria-label="GitHub username"
-          className="h-16 flex-1 bg-transparent px-1 font-mono text-2xl text-app-primary outline-none placeholder:text-app-muted"
+          className="h-12 flex-1 bg-transparent px-2 text-lg font-medium text-app-primary outline-none placeholder:text-app-subtle"
         />
         <button
           type="submit"
           disabled={busy}
           className={cn(
-            'inline-flex h-16 shrink-0 items-center gap-2 px-6 font-mono text-base uppercase tracking-widest text-white transition-colors',
-            'bg-app-accent hover:bg-app-primary disabled:opacity-90',
-            'focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-app-accent/40',
+            'inline-flex h-12 shrink-0 items-center gap-1.5 rounded-full bg-app-accent px-6 text-sm font-semibold text-white shadow-md transition-all',
+            'hover:scale-[0.98] hover:bg-app-accent-hover hover:shadow-lg active:scale-[0.96] disabled:opacity-90',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
           )}
         >
           {busy ? (
@@ -82,11 +77,8 @@ export function UsernameInput({ onValueChange }: Props) {
         </button>
       </div>
       {error && (
-        <p
-          role="alert"
-          className="mt-2 font-mono text-xs uppercase tracking-widest text-app-danger"
-        >
-          [ ERROR ] {error}
+        <p role="alert" className="mt-2 text-center text-sm text-app-danger">
+          {error}
         </p>
       )}
     </form>

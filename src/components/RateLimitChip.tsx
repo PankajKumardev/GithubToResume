@@ -1,4 +1,5 @@
 import type { RateLimit } from '@/resume/types';
+import { Activity } from 'lucide-react';
 import { formatResetTime, rateLimitPercent } from '@/github/rateLimit';
 import { cn } from '@/lib/format';
 
@@ -12,23 +13,26 @@ export function RateLimitChip({ rateLimit }: Props) {
   const reset = formatResetTime(rateLimit);
   const tone =
     pct < 10
-      ? 'text-app-danger'
+      ? 'text-app-danger border-red-100 bg-red-50'
       : pct < 30
-        ? 'text-amber-700'
-        : 'text-app-muted';
+        ? 'text-amber-700 border-amber-100 bg-amber-50'
+        : 'text-app-muted border-app-border bg-app-surface';
 
   return (
     <div
       role="status"
       aria-live="polite"
       className={cn(
-        'hidden font-mono text-[10px] uppercase tracking-widest tabular-nums sm:inline-flex',
+        'hidden items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px] tabular-nums sm:inline-flex',
         tone,
       )}
       title={`${rateLimit.remaining} of ${rateLimit.limit} GraphQL requests remaining`}
     >
-      <span>RATE: {rateLimit.remaining}/{rateLimit.limit}</span>
-      {reset && <span className="ml-2 opacity-70">· RESET {reset}</span>}
+      <Activity className="h-3 w-3" />
+      <span>
+        {rateLimit.remaining}/{rateLimit.limit}
+      </span>
+      {reset && <span className="opacity-70">· resets {reset}</span>}
     </div>
   );
 }
