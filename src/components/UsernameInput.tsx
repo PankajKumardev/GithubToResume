@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Github, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/format';
 
 const VALID = /^[A-Za-z0-9](?:[A-Za-z0-9]|-(?=[A-Za-z0-9])){0,38}$/;
 
-/** Glass pill command bar — bg-white/70 + backdrop-blur-xl, rounded-full. */
+/**
+ * Command palette pattern — Raycast-style. Strict shadow-cmd, rounded-xl
+ * shell. Mono prefix on the left (`github.com/`), borderless mono input,
+ * sharp ink button.
+ */
 export function UsernameInput() {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -32,13 +36,13 @@ export function UsernameInput() {
     <form onSubmit={submit} className="w-full">
       <div
         className={cn(
-          'flex items-center gap-1.5 rounded-full border border-white/40 bg-white/70 p-1.5 shadow-glass backdrop-blur-xl transition-shadow hover:shadow-soft',
+          'flex w-full items-center rounded-xl bg-white p-1.5 shadow-cmd transition-shadow hover:shadow-[0_0_0_1px_rgba(0,0,0,0.1),0_8px_28px_rgba(0,0,0,0.06)]',
           error && 'ring-2 ring-red-200',
         )}
       >
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-app-surface text-app-muted">
-          <Github className="h-4 w-4" />
-        </div>
+        <span className="select-none whitespace-nowrap pl-3 pr-1 font-mono text-base text-muted">
+          github.com/
+        </span>
         <input
           type="text"
           inputMode="text"
@@ -54,30 +58,30 @@ export function UsernameInput() {
             if (error) setError(null);
           }}
           aria-label="GitHub username"
-          className="h-12 flex-1 bg-transparent px-2 text-lg font-medium text-app-primary outline-none placeholder:text-app-subtle"
+          className="h-11 flex-1 bg-transparent px-1 font-mono text-lg text-ink outline-none placeholder:text-muted/50"
         />
         <button
           type="submit"
           disabled={busy}
           className={cn(
-            'inline-flex h-12 shrink-0 items-center gap-1.5 rounded-full bg-app-accent px-6 text-sm font-semibold text-white shadow-md transition-all',
-            'hover:scale-[0.98] hover:bg-app-accent-hover hover:shadow-lg active:scale-[0.96] disabled:opacity-90',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+            'inline-flex h-11 shrink-0 items-center gap-1.5 rounded-lg bg-ink px-5 text-sm font-medium text-white transition-colors',
+            'hover:bg-black disabled:opacity-90',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white',
           )}
         >
           {busy ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" /> Compiling
+              <Loader2 className="h-4 w-4 animate-spin" /> Generating
             </>
           ) : (
             <>
-              Compile <ArrowRight className="h-4 w-4" />
+              Generate <ArrowRight className="h-4 w-4" />
             </>
           )}
         </button>
       </div>
       {error && (
-        <p role="alert" className="mt-2 text-center text-sm text-app-danger">
+        <p role="alert" className="mt-2 text-center text-sm text-red-600">
           {error}
         </p>
       )}

@@ -51,20 +51,16 @@ export function ExportBar({ data, theme }: Props) {
 
       <button
         onClick={onCopy}
-        className="hidden h-9 items-center gap-1.5 rounded-full border border-app-border bg-white px-3 text-xs text-app-primary shadow-sm hover:bg-app-surface md:inline-flex"
+        className="hidden h-9 items-center gap-1.5 rounded-md border border-border bg-white px-3 text-xs text-ink hover:bg-surface md:inline-flex"
         aria-label="Copy share link"
       >
-        {copied ? (
-          <Check className="h-3.5 w-3.5 text-app-success" />
-        ) : (
-          <Copy className="h-3.5 w-3.5" />
-        )}
+        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
         <span>{copied ? 'Copied' : 'Share'}</span>
       </button>
 
       <button
         onClick={() => window.print()}
-        className="hidden h-9 items-center gap-1.5 rounded-full border border-app-border bg-white px-3 text-xs text-app-primary shadow-sm hover:bg-app-surface md:inline-flex"
+        className="hidden h-9 items-center gap-1.5 rounded-md border border-border bg-white px-3 text-xs text-ink hover:bg-surface md:inline-flex"
         aria-label="Print"
       >
         <Printer className="h-3.5 w-3.5" />
@@ -75,15 +71,14 @@ export function ExportBar({ data, theme }: Props) {
         onClick={onDownload}
         disabled={!data || phase === 'busy'}
         className={cn(
-          'relative inline-flex h-10 min-w-[170px] items-center justify-center gap-2 overflow-hidden rounded-full px-5 text-sm font-medium shadow-md transition-all hover:shadow-lg',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-app-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+          'relative inline-flex h-9 min-w-[150px] items-center justify-center gap-2 overflow-hidden rounded-md px-4 text-sm font-medium transition-colors',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white',
           phase === 'done'
-            ? 'bg-emerald-500 text-white'
+            ? 'bg-emerald-600 text-white'
             : phase === 'error'
-              ? 'bg-app-danger text-white'
-              : 'bg-app-primary text-white hover:bg-slate-800',
+              ? 'bg-red-600 text-white'
+              : 'bg-ink text-white hover:bg-black',
           (!data || phase === 'busy') && 'opacity-95',
-          'active:scale-[0.98]',
         )}
         title={errMsg ?? undefined}
       >
@@ -93,7 +88,7 @@ export function ExportBar({ data, theme }: Props) {
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.12 }}
             className="inline-flex items-center gap-1.5"
           >
             {phase === 'busy' ? (
@@ -126,16 +121,16 @@ function PaperToggle({
   onChange: (p: 'a4' | 'letter') => void;
 }) {
   return (
-    <div className="hidden h-9 items-center gap-0.5 rounded-full border border-app-border bg-app-surface p-0.5 lg:inline-flex">
+    <div className="hidden h-9 items-center gap-0.5 rounded-md border border-border bg-surface p-0.5 lg:inline-flex">
       {(['a4', 'letter'] as const).map((p) => (
         <button
           key={p}
           onClick={() => onChange(p)}
           className={cn(
-            'rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em]',
+            'rounded-sm px-2 py-1 font-mono text-[10px] uppercase tracking-widest',
             paperSize === p
-              ? 'bg-white text-app-primary shadow-sm ring-1 ring-app-border-strong'
-              : 'text-app-muted hover:text-app-primary',
+              ? 'bg-white text-ink shadow-sm ring-1 ring-border'
+              : 'text-muted hover:text-ink',
           )}
         >
           {p === 'a4' ? 'A4' : 'Letter'}

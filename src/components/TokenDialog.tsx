@@ -9,19 +9,17 @@ import {
   ShieldCheck,
   AlertTriangle,
   Loader2,
-  KeyRound,
 } from 'lucide-react';
 import { useTokenStore } from '@/store/tokenStore';
 import { validateToken } from '@/github/client';
 import { cn } from '@/lib/format';
-import { springSnap } from '@/lib/motion';
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-/** Glassmorphic token modal — bg-white/85 + backdrop-blur, rounded-2xl. */
+/** Strict white modal — solid backdrop (no blur), 1px border, rounded-xl. */
 export function TokenDialog({ open, onClose }: Props) {
   const { token, setToken, clearToken } = useTokenStore();
   const [draft, setDraft] = useState(token ?? '');
@@ -94,85 +92,79 @@ export function TokenDialog({ open, onClose }: Props) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
+          transition={{ duration: 0.15 }}
         >
           <div
             onClick={onClose}
-            className="absolute inset-0 bg-app-primary/15 backdrop-blur-md"
+            className="absolute inset-0 bg-black/30"
             aria-hidden
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: 8 }}
+            initial={{ opacity: 0, scale: 0.97, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 4 }}
-            transition={springSnap}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-white/40 bg-white/90 p-6 shadow-glass backdrop-blur-2xl"
+            className="relative w-full max-w-lg overflow-hidden rounded-xl border border-border bg-white shadow-cmd"
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-app-accent/10 text-app-accent ring-1 ring-app-accent/20">
-                  <KeyRound className="h-4.5 w-4.5" />
-                </div>
-                <div>
-                  <h2
-                    id="token-dialog-title"
-                    className="text-lg font-semibold tracking-crisp text-app-primary"
-                  >
-                    GitHub Personal Access Token
-                  </h2>
-                  <p className="mt-0.5 text-sm text-app-muted">
-                    Optional — boosts your rate limit from 60/hr to 5,000/hr.
-                  </p>
-                </div>
+            <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-3.5">
+              <div>
+                <h2 id="token-dialog-title" className="text-base font-semibold tracking-tight text-ink">
+                  Configure GitHub PAT
+                </h2>
+                <p className="mt-0.5 text-xs text-muted">
+                  Boosts rate limit from 60/hr to 5,000/hr.
+                </p>
               </div>
               <button
                 ref={closeRef}
                 onClick={onClose}
-                className="rounded-full p-1.5 text-app-muted hover:bg-app-surface hover:text-app-primary"
+                className="rounded-md p-1 text-muted hover:bg-surface hover:text-ink"
                 aria-label="Close"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="mt-5">
-              <label className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-app-muted">
-                Token
-              </label>
-              <div className="relative mt-1.5">
-                <input
-                  type={show ? 'text' : 'password'}
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  placeholder="ghp_••••••••••••••••••••••••••••••••"
-                  className="w-full rounded-xl border border-app-border bg-app-surface px-3.5 py-2.5 pr-10 font-mono text-sm text-app-primary outline-none transition-all focus:border-app-accent focus:bg-white focus:ring-2 focus:ring-app-accent/20"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShow((s) => !s)}
-                  aria-label={show ? 'Hide token' : 'Show token'}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-app-muted hover:bg-app-surface hover:text-app-primary"
-                >
-                  {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
+            <div className="space-y-4 p-5">
+              <div>
+                <label className="block font-mono text-[10.5px] uppercase tracking-widest text-muted">
+                  Token
+                </label>
+                <div className="relative mt-1.5">
+                  <input
+                    type={show ? 'text' : 'password'}
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    placeholder="ghp_••••••••••••••••••••••••••••••••"
+                    className="w-full rounded-md border border-border bg-surface px-3 py-2 pr-10 font-mono text-sm text-ink outline-none transition-colors focus:border-ink focus:bg-white"
+                    autoComplete="off"
+                    spellCheck={false}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShow((s) => !s)}
+                    aria-label={show ? 'Hide token' : 'Show token'}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-muted hover:bg-surface hover:text-ink"
+                  >
+                    {show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
               </div>
-              <ul className="mt-3 space-y-1 text-xs leading-relaxed text-app-muted">
+
+              <ul className="space-y-1 text-xs text-muted">
                 <li>
                   Required scopes (classic):{' '}
-                  <code className="rounded bg-app-surface px-1 py-0.5 font-mono text-app-primary">
+                  <code className="rounded border border-border bg-surface px-1 py-0.5 font-mono text-ink">
                     public_repo
-                  </code>
-                  ,{' '}
-                  <code className="rounded bg-app-surface px-1 py-0.5 font-mono text-app-primary">
+                  </code>{' '}
+                  <code className="rounded border border-border bg-surface px-1 py-0.5 font-mono text-ink">
                     read:user
                   </code>
                 </li>
                 <li>
                   <a
-                    className="inline-flex items-center gap-0.5 font-medium text-app-accent hover:underline"
+                    className="inline-flex items-center gap-0.5 font-medium text-ink underline-offset-2 hover:underline"
                     href="https://github.com/settings/tokens/new?scopes=public_repo,read:user&description=GitHub%20R%C3%A9sum%C3%A9"
                     target="_blank"
                     rel="noreferrer"
@@ -183,28 +175,28 @@ export function TokenDialog({ open, onClose }: Props) {
                 </li>
                 <li>Stored only in your browser. Posted only to api.github.com.</li>
               </ul>
+
+              {warning && (
+                <div
+                  role="alert"
+                  className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900"
+                >
+                  <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                  <span>{warning}</span>
+                </div>
+              )}
+              {info && (
+                <div
+                  role="status"
+                  className="flex items-start gap-2 rounded-md border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900"
+                >
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  <span>{info}</span>
+                </div>
+              )}
             </div>
 
-            {warning && (
-              <div
-                role="alert"
-                className="mt-4 flex items-start gap-2 rounded-xl border border-amber-100 bg-amber-50 p-3 text-sm text-amber-900"
-              >
-                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
-                <span>{warning}</span>
-              </div>
-            )}
-            {info && (
-              <div
-                role="status"
-                className="mt-4 flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-900"
-              >
-                <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                <span>{info}</span>
-              </div>
-            )}
-
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-surface/50 px-5 py-3.5">
               <button
                 type="button"
                 onClick={() => {
@@ -213,16 +205,16 @@ export function TokenDialog({ open, onClose }: Props) {
                   setInfo('Token cleared.');
                   setWarning(null);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm text-app-muted hover:bg-app-surface hover:text-app-primary"
+                className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm text-muted hover:bg-white hover:text-ink"
               >
-                <Trash2 className="h-4 w-4" />
-                Clear token
+                <Trash2 className="h-3.5 w-3.5" />
+                Clear
               </button>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-full border border-app-border bg-white px-4 py-2 text-sm text-app-primary hover:bg-app-surface"
+                  className="rounded-md border border-border bg-white px-3 py-1.5 text-sm text-ink hover:bg-surface"
                 >
                   Cancel
                 </button>
@@ -231,12 +223,12 @@ export function TokenDialog({ open, onClose }: Props) {
                   onClick={save}
                   disabled={validating}
                   className={cn(
-                    'inline-flex items-center gap-1.5 rounded-full bg-app-primary px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-app-accent hover:shadow-md',
+                    'inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-1.5 text-sm font-medium text-white hover:bg-black',
                     validating && 'opacity-80',
                   )}
                 >
                   {validating && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                  Save token
+                  Save
                 </button>
               </div>
             </div>

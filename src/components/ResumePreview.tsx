@@ -35,7 +35,7 @@ export function ResumePreview({ data, theme, loading = false }: Props) {
         style={{ width: PAGE_WIDTH * scale, height: PAGE_HEIGHT * scale }}
       >
         <div
-          className="origin-top-left rounded-sm bg-white shadow-a4 ring-1 ring-black/5 print-clean"
+          className="origin-top-left rounded-sm bg-white shadow-pdf ring-1 ring-border print-clean"
           style={{
             width: PAGE_WIDTH,
             transform: `scale(${scale})`,
