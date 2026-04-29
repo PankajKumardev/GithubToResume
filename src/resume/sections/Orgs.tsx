@@ -1,18 +1,12 @@
 import type { ResumeData } from '@/resume/types';
+import type { ThemeTokens } from '@/resume/themes';
+import { SectionHeading } from './SectionHeading';
 
-export function OrgsSection({ data }: { data: ResumeData }) {
+export function OrgsSection({ data, theme }: { data: ResumeData; theme: ThemeTokens }) {
   if (data.organizations.length === 0) return null;
   return (
     <section>
-      <h2
-        className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-        style={{
-          color: 'var(--theme-text-primary)',
-          fontFamily: 'var(--theme-font-heading)',
-        }}
-      >
-        Organizations
-      </h2>
+      <SectionHeading theme={theme} label="Organizations" />
       <ul className="mt-2 flex flex-wrap gap-2">
         {data.organizations.map((org) => (
           <li key={org.login}>
@@ -20,8 +14,12 @@ export function OrgsSection({ data }: { data: ResumeData }) {
               href={org.url}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-1 hover:opacity-90"
-              style={{ background: 'var(--theme-chip-bg)', color: 'var(--theme-chip-text)' }}
+              className="inline-flex items-center gap-1.5 px-1.5 py-1 hover:opacity-90"
+              style={{
+                background: 'var(--theme-chip-bg)',
+                color: 'var(--theme-chip-text)',
+                borderRadius: theme.id === 'mono' ? 0 : 6,
+              }}
               title={org.name ?? org.login}
             >
               <img

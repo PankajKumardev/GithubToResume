@@ -1,6 +1,7 @@
 import { Document, Image, Link, Page, Text, View } from '@react-pdf/renderer';
 import type { ResumeData } from '@/resume/types';
 import type { ThemeTokens } from '@/resume/themes';
+import { formatSectionTitle } from '@/resume/themes';
 import { makeStyles, type ThemedStyles } from './styles';
 import { compactNumber, formatDate, relativeTime } from '@/lib/format';
 
@@ -31,20 +32,20 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
         {isTwoCol ? (
           <View style={styles.columns}>
             <View style={styles.leftCol}>
-              <Languages data={data} styles={styles} />
-              <Orgs data={data} styles={styles} />
+              <Languages data={data} theme={theme} styles={styles} />
+              <Orgs data={data} theme={theme} styles={styles} />
             </View>
             <View style={styles.rightCol}>
-              <Pinned data={data} styles={styles} />
-              <TopRepos data={data} styles={styles} />
+              <Pinned data={data} theme={theme} styles={styles} />
+              <TopRepos data={data} theme={theme} styles={styles} />
             </View>
           </View>
         ) : (
           <>
-            <Languages data={data} styles={styles} />
-            <Pinned data={data} styles={styles} />
-            <TopRepos data={data} styles={styles} />
-            <Orgs data={data} styles={styles} />
+            <Languages data={data} theme={theme} styles={styles} />
+            <Pinned data={data} theme={theme} styles={styles} />
+            <TopRepos data={data} theme={theme} styles={styles} />
+            <Orgs data={data} theme={theme} styles={styles} />
           </>
         )}
 
@@ -63,6 +64,20 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
 }
 
 /* -------------------------------------------------------------------------- */
+
+function SectionTitle({
+  theme,
+  styles,
+  label,
+}: {
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+  label: string;
+}) {
+  const text = formatSectionTitle(theme, label);
+  const style = theme.topRuleSections ? styles.sectionTitleTopRule : styles.sectionTitle;
+  return <Text style={style}>{text}</Text>;
+}
 
 function Header({
   data,
@@ -134,19 +149,33 @@ function Stats({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
   );
 }
 
-function Languages({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
+function Languages({
+  data,
+  theme,
+  styles,
+}: {
+  data: ResumeData;
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+}) {
   if (data.languages.length === 0) return null;
+
+  const useAccent = theme.languageBarStyle === 'accent';
+  // Stepped opacities so the cobalt bar reads as differentiated bands.
+  const opacityFor = (i: number, total: number) => 1 - (i / Math.max(1, total)) * 0.55;
+
   return (
     <View wrap={false}>
-      <Text style={styles.sectionTitle}>Languages</Text>
+      <SectionTitle theme={theme} styles={styles} label="Languages" />
       <View style={styles.langBar}>
-        {data.languages.map((l) => (
+        {data.languages.map((l, i) => (
           <View
             key={l.name}
             style={{
               ...styles.langSegment,
               width: `${l.percent}%`,
-              backgroundColor: l.color,
+              backgroundColor: useAccent ? theme.colors.accent : l.color,
+              opacity: useAccent ? opacityFor(i, data.languages.length) : 1,
             }}
           />
         ))}
@@ -157,7 +186,7 @@ function Languages({ data, styles }: { data: ResumeData; styles: ThemedStyles })
             <View style={{ ...styles.swatch, backgroundColor: l.color }} />
             <Text>
               {l.name}{' '}
-              <Text style={{ color: 'rgba(0,0,0,0.5)' }}>{l.percent}%</Text>
+              <Text style={{ color: theme.colors.textMuted }}>{l.percent}%</Text>
             </Text>
           </View>
         ))}
@@ -166,11 +195,19 @@ function Languages({ data, styles }: { data: ResumeData; styles: ThemedStyles })
   );
 }
 
-function Pinned({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
+function Pinned({
+  data,
+  theme,
+  styles,
+}: {
+  data: ResumeData;
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+}) {
   if (data.pinned.length === 0) return null;
   return (
     <View>
-      <Text style={styles.sectionTitle}>Pinned Projects</Text>
+      <SectionTitle theme={theme} styles={styles} label="Pinned Projects" />
       <View style={styles.pinnedGrid}>
         {data.pinned.map((repo) => (
           <View key={repo.fullName} style={styles.pinnedCard} wrap={false}>
@@ -201,11 +238,19 @@ function Pinned({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
   );
 }
 
-function TopRepos({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
+function TopRepos({
+  data,
+  theme,
+  styles,
+}: {
+  data: ResumeData;
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+}) {
   if (data.topRepos.length === 0) return null;
   return (
     <View>
-      <Text style={styles.sectionTitle}>Top Repositories</Text>
+      <SectionTitle theme={theme} styles={styles} label="Top Repositories" />
       <View>
         {data.topRepos.map((repo) => (
           <View key={repo.fullName} style={styles.topRepoRow} wrap={false}>
@@ -214,7 +259,7 @@ function TopRepos({ data, styles }: { data: ResumeData; styles: ThemedStyles }) 
                 {repo.name}
               </Link>
               {repo.description ? (
-                <Text style={{ color: 'rgba(0,0,0,0.55)' }}>
+                <Text style={{ color: theme.colors.textMuted }}>
                   — {truncate(repo.description, 100)}
                 </Text>
               ) : null}
@@ -238,11 +283,19 @@ function TopRepos({ data, styles }: { data: ResumeData; styles: ThemedStyles }) 
   );
 }
 
-function Orgs({ data, styles }: { data: ResumeData; styles: ThemedStyles }) {
+function Orgs({
+  data,
+  theme,
+  styles,
+}: {
+  data: ResumeData;
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+}) {
   if (data.organizations.length === 0) return null;
   return (
     <View wrap={false}>
-      <Text style={styles.sectionTitle}>Organizations</Text>
+      <SectionTitle theme={theme} styles={styles} label="Organizations" />
       <View style={styles.orgGrid}>
         {data.organizations.map((o) => (
           <Link key={o.login} src={o.url} style={styles.orgChip}>

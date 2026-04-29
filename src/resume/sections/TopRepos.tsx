@@ -1,20 +1,14 @@
 import { Star } from 'lucide-react';
 import type { ResumeData } from '@/resume/types';
+import type { ThemeTokens } from '@/resume/themes';
 import { relativeTime } from '@/lib/format';
+import { SectionHeading } from './SectionHeading';
 
-export function TopReposSection({ data }: { data: ResumeData }) {
+export function TopReposSection({ data, theme }: { data: ResumeData; theme: ThemeTokens }) {
   if (data.topRepos.length === 0) return null;
   return (
     <section>
-      <h2
-        className="text-[11px] font-semibold uppercase tracking-[0.18em]"
-        style={{
-          color: 'var(--theme-text-primary)',
-          fontFamily: 'var(--theme-font-heading)',
-        }}
-      >
-        Top Repositories
-      </h2>
+      <SectionHeading theme={theme} label="Top Repositories" />
       <ul className="mt-2 divide-y" style={{ borderColor: 'var(--theme-rule)' }}>
         {data.topRepos.map((repo) => (
           <li

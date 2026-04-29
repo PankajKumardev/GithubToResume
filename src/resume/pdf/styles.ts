@@ -22,7 +22,7 @@ export function makeStyles(theme: ThemeTokens) {
       gap: 18,
     },
     leftCol: {
-      width: 160,
+      width: 170,
       gap: s.section,
     },
     rightCol: {
@@ -48,11 +48,12 @@ export function makeStyles(theme: ThemeTokens) {
       fontWeight: 600,
       color: c.textPrimary,
       lineHeight: 1.15,
+      letterSpacing: theme.id === 'mono' ? 0 : -0.4,
     },
     login: {
       fontSize: t.small,
       color: c.textMuted,
-      fontFamily: theme.id === 'dev-terminal' ? theme.fonts.mono : theme.fonts.body,
+      fontFamily: theme.fonts.mono,
     },
     metaRow: {
       flexDirection: 'row',
@@ -80,11 +81,23 @@ export function makeStyles(theme: ThemeTokens) {
     sectionTitle: {
       fontFamily: theme.fonts.heading,
       fontSize: t.section,
+      fontWeight: theme.id === 'mono' ? 500 : 600,
+      letterSpacing: theme.id === 'mono' ? 0 : 1.4,
+      textTransform: 'uppercase',
+      color: c.textPrimary,
+      marginBottom: 6,
+    },
+    sectionTitleTopRule: {
+      fontFamily: theme.fonts.heading,
+      fontSize: t.section,
       fontWeight: 600,
       letterSpacing: 1.4,
       textTransform: 'uppercase',
       color: c.textPrimary,
       marginBottom: 6,
+      paddingTop: 6,
+      borderTopWidth: theme.rules.weight,
+      borderTopColor: c.rule,
     },
 
     /* Stats */
@@ -103,6 +116,7 @@ export function makeStyles(theme: ThemeTokens) {
       letterSpacing: 1.2,
       textTransform: 'uppercase',
       color: c.textMuted,
+      fontFamily: theme.fonts.mono,
     },
     statValue: {
       fontFamily: theme.fonts.heading,
@@ -120,6 +134,7 @@ export function makeStyles(theme: ThemeTokens) {
       borderRadius: 3,
       overflow: 'hidden',
       marginBottom: 6,
+      backgroundColor: c.chipBg,
     },
     langSegment: { height: '100%' },
     legendRow: {
@@ -145,7 +160,7 @@ export function makeStyles(theme: ThemeTokens) {
       width: '49%',
       borderWidth: theme.rules.weight,
       borderColor: c.rule,
-      borderRadius: 4,
+      borderRadius: theme.id === 'mono' ? 0 : 4,
       padding: 7,
       gap: 3,
     },
@@ -197,7 +212,7 @@ export function makeStyles(theme: ThemeTokens) {
       backgroundColor: c.chipBg,
       paddingVertical: 2,
       paddingHorizontal: 4,
-      borderRadius: 3,
+      borderRadius: theme.id === 'mono' ? 0 : 3,
     },
     orgAvatar: { width: 10, height: 10, borderRadius: 2 },
     orgName: { fontSize: t.small, color: c.chipText, fontWeight: 500 },
@@ -215,6 +230,7 @@ export function makeStyles(theme: ThemeTokens) {
       borderTopWidth: theme.rules.weight,
       borderTopColor: c.rule,
       paddingTop: 4,
+      fontFamily: theme.fonts.mono,
     },
 
     link: { color: c.accent, textDecoration: 'none' },

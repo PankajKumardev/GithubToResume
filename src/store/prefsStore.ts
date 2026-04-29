@@ -16,10 +16,20 @@ interface PrefsState {
 
 const MAX_RECENT = 6;
 
+const LEGACY_THEME_MAP: Record<string, ThemeId> = {
+  'modern-serif': 'minimal',
+  'swiss-minimal': 'editorial',
+  'dev-terminal': 'mono',
+};
+
+function isThemeId(v: unknown): v is ThemeId {
+  return v === 'minimal' || v === 'editorial' || v === 'mono';
+}
+
 export const usePrefsStore = create<PrefsState>()(
   persist(
     (set, get) => ({
-      theme: 'modern-serif',
+      theme: 'minimal',
       paperSize: 'a4',
       recent: [],
       setTheme: (t) => set({ theme: t }),
@@ -39,6 +49,18 @@ export const usePrefsStore = create<PrefsState>()(
     {
       name: 'gh_prefs_v1',
       storage: createJSONStorage(() => localStorage),
+      version: 2,
+      migrate: (persisted, _version) => {
+        if (!persisted || typeof persisted !== 'object') return persisted as PrefsState;
+        const obj = persisted as Record<string, unknown>;
+        const t = obj.theme;
+        if (typeof t === 'string' && t in LEGACY_THEME_MAP) {
+          obj.theme = LEGACY_THEME_MAP[t];
+        } else if (!isThemeId(t)) {
+          obj.theme = 'minimal';
+        }
+        return obj as unknown as PrefsState;
+      },
     },
   ),
 );

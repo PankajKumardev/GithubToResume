@@ -27,7 +27,7 @@ export function ResumeView({ data, theme }: { data: ResumeData; theme: ThemeToke
         fontFamily: 'var(--theme-font-body)',
         width: PAGE_WIDTH,
         minHeight: PAGE_HEIGHT,
-        padding: 48,
+        padding: 52,
       }}
       className={cn('flex flex-col gap-5')}
     >
@@ -36,25 +36,22 @@ export function ResumeView({ data, theme }: { data: ResumeData; theme: ThemeToke
       <StatsSection data={data} />
 
       {isTwoCol ? (
-        <div
-          className="grid gap-6"
-          style={{ gridTemplateColumns: '230px 1fr' }}
-        >
+        <div className="grid gap-6" style={{ gridTemplateColumns: '230px 1fr' }}>
           <div className="flex flex-col gap-5">
-            <LanguagesSection data={data} />
-            <OrgsSection data={data} />
+            <LanguagesSection data={data} theme={theme} />
+            <OrgsSection data={data} theme={theme} />
           </div>
           <div className="flex flex-col gap-5">
-            <PinnedSection data={data} />
-            <TopReposSection data={data} />
+            <PinnedSection data={data} theme={theme} />
+            <TopReposSection data={data} theme={theme} />
           </div>
         </div>
       ) : (
         <>
-          <LanguagesSection data={data} />
-          <PinnedSection data={data} />
-          <TopReposSection data={data} />
-          <OrgsSection data={data} />
+          <LanguagesSection data={data} theme={theme} />
+          <PinnedSection data={data} theme={theme} />
+          <TopReposSection data={data} theme={theme} />
+          <OrgsSection data={data} theme={theme} />
         </>
       )}
     </div>

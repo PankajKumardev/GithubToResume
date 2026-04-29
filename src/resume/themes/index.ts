@@ -1,21 +1,18 @@
 import type { CSSProperties } from 'react';
 import type { ThemeId, ThemeTokens } from './tokens';
-import { modernSerif } from './modernSerif';
-import { swissMinimal } from './swissMinimal';
-import { devTerminal } from './devTerminal';
+import { minimal } from './minimal';
+import { editorial } from './editorial';
+import { mono } from './mono';
 
 export const themes: Record<ThemeId, ThemeTokens> = {
-  'modern-serif': modernSerif,
-  'swiss-minimal': swissMinimal,
-  'dev-terminal': devTerminal,
+  minimal,
+  editorial,
+  mono,
 };
 
-export const themeList: ThemeTokens[] = [modernSerif, swissMinimal, devTerminal];
+export const themeList: ThemeTokens[] = [minimal, editorial, mono];
 
-/**
- * Returns the inline-style object that wires the theme into CSS variables for
- * the on-screen renderer. The PDF renderer reads `theme` directly.
- */
+/** Wires theme tokens into CSS variables for the on-screen renderer. */
 export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   return {
     ['--theme-bg' as string]: theme.colors.bg,
@@ -29,6 +26,12 @@ export function cssVarsFor(theme: ThemeTokens): CSSProperties {
     ['--theme-font-body' as string]: `'${theme.fonts.body}'`,
     ['--theme-font-mono' as string]: `'${theme.fonts.mono}'`,
   };
+}
+
+/** Format a section label per theme — e.g. mono adds [ BRACKETS ]. */
+export function formatSectionTitle(theme: ThemeTokens, label: string): string {
+  const upper = label.toUpperCase();
+  return theme.bracketSectionTitles ? `[ ${upper} ]` : upper;
 }
 
 export type { ThemeId, ThemeTokens } from './tokens';

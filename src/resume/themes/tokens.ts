@@ -1,4 +1,4 @@
-export type ThemeId = 'modern-serif' | 'swiss-minimal' | 'dev-terminal';
+export type ThemeId = 'minimal' | 'editorial' | 'mono';
 
 export interface ThemeTokens {
   id: ThemeId;
@@ -35,4 +35,10 @@ export interface ThemeTokens {
   /** Hairline weight (pt) for rules and dividers. */
   rules: { weight: number };
   layout: 'single' | 'two-column';
+  /** Render section titles wrapped in [ BRACKETS ]. */
+  bracketSectionTitles: boolean;
+  /** Render a 1px top border above each section title. */
+  topRuleSections: boolean;
+  /** Language stacked-bar style: per-language colors, or single accent with opacity steps. */
+  languageBarStyle: 'spectrum' | 'accent';
 }

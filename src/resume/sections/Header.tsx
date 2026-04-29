@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/format';
 
 export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeTokens }) {
   const p = data.profile;
-  const isDevTerminal = theme.id === 'dev-terminal';
+  const isMono = theme.id === 'mono';
   return (
     <header className="flex items-start gap-5">
       <img
@@ -29,7 +29,7 @@ export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeT
           className="mt-0.5 text-sm"
           style={{
             color: 'var(--theme-text-muted)',
-            fontFamily: isDevTerminal ? 'var(--theme-font-mono)' : 'var(--theme-font-body)',
+            fontFamily: isMono ? 'var(--theme-font-mono)' : 'var(--theme-font-body)',
           }}
         >
           @{p.login}
