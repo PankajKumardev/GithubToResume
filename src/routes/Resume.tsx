@@ -14,7 +14,6 @@ import { ExportBar } from '@/components/ExportBar';
 import { RateLimitChip } from '@/components/RateLimitChip';
 import { ErrorState } from '@/components/ErrorState';
 import { TokenDialog } from '@/components/TokenDialog';
-import { springSoft } from '@/lib/motion';
 
 export default function ResumeRoute() {
   const { username = '' } = useParams<{ username: string }>();
@@ -48,7 +47,7 @@ export default function ResumeRoute() {
   const rateLimit: RateLimit | undefined = query.data?.rateLimit;
 
   return (
-    <div className="flex min-h-screen flex-col bg-app-surface">
+    <div className="flex min-h-screen flex-col bg-surface">
       <TopBar
         username={username}
         avatarUrl={data?.profile.avatarUrl}
@@ -57,7 +56,7 @@ export default function ResumeRoute() {
         onOpenToken={() => setTokenDialogOpen(true)}
       />
 
-      <main className="flex-1 px-4 pb-12 pt-28 sm:px-6 lg:px-8">
+      <main className="flex-1 px-4 pb-12 pt-24 sm:px-6 lg:px-8">
         {query.isError && query.error instanceof ResumeError ? (
           <ErrorState
             kind={query.error.kind}
@@ -68,9 +67,9 @@ export default function ResumeRoute() {
           />
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={springSoft}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
             className="mx-auto max-w-[820px]"
           >
             <ResumePreview
@@ -82,14 +81,13 @@ export default function ResumeRoute() {
         )}
 
         {!effectiveToken && (
-          <div className="no-print mx-auto mt-6 max-w-md rounded-2xl border border-app-border bg-white/80 p-3.5 text-center text-xs text-app-muted shadow-sm backdrop-blur">
-            <span className="font-medium text-app-primary">Tip:</span> Add a personal access
-            token to lift the anonymous 60/hr limit to 5,000/hr.{' '}
+          <div className="no-print mx-auto mt-6 max-w-md rounded-md border border-border bg-white px-3.5 py-2.5 text-center font-mono text-[11px] uppercase tracking-widest text-muted">
+            <span className="font-semibold text-ink">TIP ·</span> ANONYMOUS LIMIT 60/HR ·{' '}
             <button
               onClick={() => setTokenDialogOpen(true)}
-              className="font-medium text-app-accent hover:underline"
+              className="text-ink underline-offset-2 hover:underline"
             >
-              Add token →
+              ADD TOKEN
             </button>
           </div>
         )}
@@ -112,36 +110,36 @@ function TopBar({ username, avatarUrl, rateLimit, data, onOpenToken }: TopBarPro
   const { theme: themeId } = usePrefsStore();
   const theme = themes[themeId];
   return (
-    <header className="no-print fixed inset-x-0 top-0 z-40 border-b border-app-border bg-white/80 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+    <header className="no-print fixed inset-x-0 top-0 z-40 border-b border-border bg-white">
+      <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             to="/"
-            className="inline-flex h-9 items-center gap-1 rounded-full border border-app-border bg-white px-2.5 text-app-muted shadow-sm hover:bg-app-surface hover:text-app-primary"
+            className="inline-flex h-9 items-center gap-1 rounded-md border border-border bg-white px-2 text-muted hover:bg-surface hover:text-ink"
             aria-label="Home"
           >
             <ChevronLeft className="h-4 w-4" />
           </Link>
-          <div className="flex h-9 items-center gap-2 rounded-full border border-app-border bg-white pl-1 pr-3 shadow-sm">
+          <div className="flex h-9 items-center gap-2 rounded-md border border-border bg-white pl-1 pr-3">
             {avatarUrl ? (
               <img
                 src={avatarUrl}
                 alt=""
                 aria-hidden="true"
-                className="h-7 w-7 rounded-full object-cover"
+                className="h-7 w-7 rounded-md object-cover"
               />
             ) : (
-              <Github className="ml-2 h-4 w-4 text-app-muted" />
+              <Github className="ml-1.5 h-4 w-4 text-muted" />
             )}
-            <span className="font-mono text-sm font-medium text-app-primary">@{username}</span>
+            <span className="font-mono text-sm font-medium text-ink">@{username}</span>
           </div>
           <RateLimitChip rateLimit={rateLimit} />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <ThemeSwitcher />
           <button
             onClick={onOpenToken}
-            className="hidden h-9 items-center gap-1.5 rounded-full border border-app-border bg-white px-3 text-xs text-app-muted shadow-sm hover:bg-app-surface hover:text-app-primary md:inline-flex"
+            className="hidden h-9 items-center gap-1.5 rounded-md border border-border bg-white px-3 text-xs text-muted hover:bg-surface hover:text-ink md:inline-flex"
             aria-label="Token settings"
           >
             <KeyRound className="h-3.5 w-3.5" />

@@ -9,7 +9,6 @@ import { PinnedSection } from './sections/Pinned';
 import { TopReposSection } from './sections/TopRepos';
 import { OrgsSection } from './sections/Orgs';
 
-/** A4 @ 96 dpi == 794 x 1123 px. */
 export const PAGE_WIDTH = 794;
 export const PAGE_HEIGHT = 1123;
 
