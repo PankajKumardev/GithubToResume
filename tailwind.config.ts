@@ -5,21 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        app: {
-          bg: '#FFFFFF',
-          surface: '#F8FAFC',
-          'surface-2': '#F1F5F9',
-          border: '#F1F5F9',
-          'border-strong': '#E2E8F0',
-          primary: '#0F172A',
-          muted: '#64748B',
-          subtle: '#94A3B8',
-          accent: '#3B82F6',
-          'accent-hover': '#2563EB',
-          success: '#10B981',
-          danger: '#EF4444',
-          warning: '#F59E0B',
-        },
+        background: '#FFFFFF',
+        surface: '#FAFAFA',
+        border: '#EAEAEA',
+        ink: '#111111',
+        muted: '#888888',
+        // résumé canvas tokens (driven by CSS variables)
         theme: {
           bg: 'var(--theme-bg)',
           text: 'var(--theme-text-primary)',
@@ -38,13 +29,12 @@ const config: Config = {
         'theme-mono': ['var(--theme-font-mono)', 'monospace'],
       },
       boxShadow: {
-        glass: '0 8px 32px -8px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.02)',
-        soft: '0 20px 40px -15px rgba(0,0,0,0.05)',
-        a4: '0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)',
+        cmd: '0 0 0 1px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04)',
+        pdf: '0 0 0 1px rgba(0,0,0,0.05), 0 20px 40px -10px rgba(0,0,0,0.1)',
       },
       letterSpacing: {
-        crisp: '-0.02em',
-        tighter: '-0.04em',
+        crisp: '-0.01em',
+        tight: '-0.02em',
       },
     },
   },

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---------- Self-hosted fonts (shell uses Geist + Geist Mono only) ---------- */
+/* ---------- Self-hosted fonts ---------- */
 @font-face {
   font-family: 'Geist';
   font-style: normal;
@@ -66,7 +66,6 @@
   font-display: swap;
   src: url('/fonts/Inter-Bold.ttf') format('truetype');
 }
-/* JetBrains Mono retained for the PDF only — not surfaced in shell. */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
@@ -75,56 +74,56 @@
   src: url('/fonts/JetBrainsMono-Regular.ttf') format('truetype');
 }
 
-/* ---------- Theme variables for the résumé canvas (default: minimal) ---------- */
+/* ---------- Theme variables for the résumé canvas (default: vercel) ---------- */
 :root {
   --theme-bg: #ffffff;
-  --theme-text-primary: #0f172a;
-  --theme-text-muted: #64748b;
-  --theme-accent: #3b82f6;
-  --theme-rule: #e2e8f0;
-  --theme-chip-bg: #f1f5f9;
-  --theme-chip-text: #0f172a;
-  --theme-font-heading: 'Inter', system-ui, sans-serif;
-  --theme-font-body: 'Inter', system-ui, sans-serif;
-  --theme-font-mono: '"Geist Mono"', monospace;
-}
-
-[data-theme='minimal'] {
-  --theme-bg: #ffffff;
-  --theme-text-primary: #0f172a;
-  --theme-text-muted: #64748b;
-  --theme-accent: #3b82f6;
-  --theme-rule: #e2e8f0;
-  --theme-chip-bg: #f1f5f9;
-  --theme-chip-text: #0f172a;
+  --theme-text-primary: #111111;
+  --theme-text-muted: #888888;
+  --theme-accent: #111111;
+  --theme-rule: #eaeaea;
+  --theme-chip-bg: #fafafa;
+  --theme-chip-text: #111111;
   --theme-font-heading: 'Inter', system-ui, sans-serif;
   --theme-font-body: 'Inter', system-ui, sans-serif;
   --theme-font-mono: 'Geist Mono', monospace;
 }
 
-[data-theme='executive'] {
+[data-theme='vercel'] {
   --theme-bg: #ffffff;
-  --theme-text-primary: #0f172a;
-  --theme-text-muted: #64748b;
-  --theme-accent: #0f172a;
-  --theme-rule: #e2e8f0;
-  --theme-chip-bg: #f1f5f9;
-  --theme-chip-text: #0f172a;
+  --theme-text-primary: #111111;
+  --theme-text-muted: #888888;
+  --theme-accent: #111111;
+  --theme-rule: #eaeaea;
+  --theme-chip-bg: #fafafa;
+  --theme-chip-text: #111111;
   --theme-font-heading: 'Inter', system-ui, sans-serif;
   --theme-font-body: 'Inter', system-ui, sans-serif;
   --theme-font-mono: 'Geist Mono', monospace;
 }
 
-[data-theme='developer'] {
+[data-theme='linear'] {
   --theme-bg: #ffffff;
-  --theme-text-primary: #0f172a;
-  --theme-text-muted: #64748b;
-  --theme-accent: #3b82f6;
-  --theme-rule: #e2e8f0;
-  --theme-chip-bg: #f1f5f9;
-  --theme-chip-text: #0f172a;
-  --theme-font-heading: 'Inter', system-ui, sans-serif;
-  --theme-font-body: 'Inter', system-ui, sans-serif;
+  --theme-text-primary: #111111;
+  --theme-text-muted: #6f6f6f;
+  --theme-accent: #111111;
+  --theme-rule: #e5e5e5;
+  --theme-chip-bg: #fafafa;
+  --theme-chip-text: #111111;
+  --theme-font-heading: 'Geist', system-ui, sans-serif;
+  --theme-font-body: 'Geist', system-ui, sans-serif;
+  --theme-font-mono: 'Geist Mono', monospace;
+}
+
+[data-theme='monospace'] {
+  --theme-bg: #ffffff;
+  --theme-text-primary: #111111;
+  --theme-text-muted: #888888;
+  --theme-accent: #111111;
+  --theme-rule: #eaeaea;
+  --theme-chip-bg: #f5f5f5;
+  --theme-chip-text: #111111;
+  --theme-font-heading: 'Geist Mono', monospace;
+  --theme-font-body: 'Geist Mono', monospace;
   --theme-font-mono: 'Geist Mono', monospace;
 }
 
@@ -138,7 +137,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;
-  color: #0f172a;
+  color: #111111;
   font-family: 'Geist', 'Inter', system-ui, sans-serif;
   font-feature-settings:
     'cv02' on,
@@ -154,11 +153,10 @@ body {
 }
 
 ::selection {
-  background-color: rgba(59, 130, 246, 0.18);
-  color: #0f172a;
+  background-color: #111111;
+  color: #ffffff;
 }
 
-/* Soft slate scrollbar */
 *::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -167,15 +165,14 @@ body {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
+  background: #d4d4d4;
+  border-radius: 6px;
   border: 2px solid #ffffff;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a3a3a3;
 }
 
-/* Print */
 @media print {
   body {
     background: white !important;
@@ -188,14 +185,4 @@ body {
     transform: none !important;
     margin: 0 !important;
   }
-}
-
-/* Mesh-gradient blobs — promoted to GPU layer to avoid scroll jank */
-.glow-blob {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(120px);
-  pointer-events: none;
-  will-change: transform;
-  transform: translateZ(0);
 }
