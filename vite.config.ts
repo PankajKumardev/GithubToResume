@@ -10,7 +10,16 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  define: {
+    // @react-pdf/renderer expects a Node `process.env.NODE_ENV` and a global `Buffer`.
+    // Vite already provides import.meta.env equivalents, but the runtime guards
+    // inside react-pdf's font/image pipelines reference these directly.
+    global: 'globalThis',
+  },
   base: process.env.VITE_BASE ?? '/',
+  optimizeDeps: {
+    include: ['buffer'],
+  },
   build: {
     target: 'es2020',
     sourcemap: false,

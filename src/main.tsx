@@ -2,8 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Buffer } from 'buffer';
 import App from './App';
 import './index.css';
+
+// `@react-pdf/renderer` references `Buffer` at runtime; expose the polyfill on
+// `window` so its image/font pipelines don't crash in the browser.
+if (typeof window !== 'undefined' && !window.Buffer) {
+  window.Buffer = Buffer;
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

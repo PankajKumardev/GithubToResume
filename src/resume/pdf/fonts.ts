@@ -3,12 +3,8 @@ import { Font } from '@react-pdf/renderer';
 let registered = false;
 
 /**
- * Registers the three OFL-licensed font families with @react-pdf/renderer.
- * Must run before any PDF generation. Idempotent.
- *
- * Fonts are served from `/fonts/*.ttf` (placed in `public/fonts/` by
- * `scripts/fetch-fonts.sh`). We use absolute origin URLs so react-pdf's
- * built-in fetch can read them in the browser.
+ * Registers the OFL-licensed font families used by the PDF themes.
+ * Idempotent. Must run before any PDF generation.
  */
 export function registerFonts(): void {
   if (registered) return;
@@ -17,20 +13,29 @@ export function registerFonts(): void {
   const base = `${window.location.origin}/fonts/`;
 
   Font.register({
+    family: 'Geist',
+    fonts: [
+      { src: base + 'Geist-Regular.ttf', fontWeight: 400 },
+      { src: base + 'Geist-Medium.ttf', fontWeight: 500 },
+      { src: base + 'Geist-SemiBold.ttf', fontWeight: 600 },
+    ],
+  });
+
+  Font.register({
+    family: 'Geist Mono',
+    fonts: [
+      { src: base + 'GeistMono-Regular.ttf', fontWeight: 400 },
+      { src: base + 'GeistMono-Medium.ttf', fontWeight: 500 },
+    ],
+  });
+
+  Font.register({
     family: 'Inter',
     fonts: [
       { src: base + 'Inter-Regular.ttf', fontWeight: 400 },
       { src: base + 'Inter-Medium.ttf', fontWeight: 500 },
       { src: base + 'Inter-SemiBold.ttf', fontWeight: 600 },
       { src: base + 'Inter-Bold.ttf', fontWeight: 700 },
-    ],
-  });
-
-  Font.register({
-    family: 'IBM Plex Serif',
-    fonts: [
-      { src: base + 'IBMPlexSerif-Regular.ttf', fontWeight: 400 },
-      { src: base + 'IBMPlexSerif-SemiBold.ttf', fontWeight: 600 },
     ],
   });
 
