@@ -30,33 +30,46 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
         <Stats data={data} styles={styles} />
 
         {isTwoCol ? (
-          <View style={styles.columns}>
+          <View style={[styles.columns, { marginTop: theme.spacing.section }]}>
             <View style={styles.leftCol}>
-              <Languages data={data} theme={theme} styles={styles} />
-              <Orgs data={data} theme={theme} styles={styles} />
+              <SectionBlock theme={theme} styles={styles}>
+                <Languages data={data} theme={theme} styles={styles} />
+              </SectionBlock>
+              <SectionBlock theme={theme} styles={styles}>
+                <Orgs data={data} theme={theme} styles={styles} />
+              </SectionBlock>
             </View>
             <View style={styles.rightCol}>
-              <Pinned data={data} theme={theme} styles={styles} />
-              <TopRepos data={data} theme={theme} styles={styles} />
+              <SectionBlock theme={theme} styles={styles}>
+                <Pinned data={data} theme={theme} styles={styles} />
+              </SectionBlock>
+              <SectionBlock theme={theme} styles={styles}>
+                <TopRepos data={data} theme={theme} styles={styles} />
+              </SectionBlock>
             </View>
           </View>
         ) : (
-          <>
-            <Languages data={data} theme={theme} styles={styles} />
-            <Pinned data={data} theme={theme} styles={styles} />
-            <TopRepos data={data} theme={theme} styles={styles} />
-            <Orgs data={data} theme={theme} styles={styles} />
-          </>
+          <View style={styles.body}>
+            <SectionBlock theme={theme} styles={styles}>
+              <Languages data={data} theme={theme} styles={styles} />
+            </SectionBlock>
+            <SectionBlock theme={theme} styles={styles}>
+              <Pinned data={data} theme={theme} styles={styles} />
+            </SectionBlock>
+            <SectionBlock theme={theme} styles={styles}>
+              <TopRepos data={data} theme={theme} styles={styles} />
+            </SectionBlock>
+            <SectionBlock theme={theme} styles={styles}>
+              <Orgs data={data} theme={theme} styles={styles} />
+            </SectionBlock>
+          </View>
         )}
 
         <View fixed style={styles.footer}>
           <Text>
-            github.com/{data.profile.login} · Generated{' '}
-            {formatDate(new Date().toISOString())}
+            github.com/{data.profile.login} · Generated {formatDate(new Date().toISOString())}
           </Text>
-          <Text
-            render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`}
-          />
+          <Text render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />
         </View>
       </Page>
     </Document>
@@ -64,6 +77,21 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
 }
 
 /* -------------------------------------------------------------------------- */
+
+function SectionBlock({
+  theme,
+  styles,
+  children,
+}: {
+  theme: ThemeTokens;
+  styles: ThemedStyles;
+  children: React.ReactNode;
+}) {
+  if (theme.borderedSections) {
+    return <View style={styles.sectionBox}>{children}</View>;
+  }
+  return <View>{children}</View>;
+}
 
 function SectionTitle({
   theme,
@@ -95,10 +123,7 @@ function Header({
   if (p.email) meta.push({ text: p.email, href: `mailto:${p.email}` });
   if (p.website) meta.push({ text: p.website.replace(/^https?:\/\//, ''), href: p.website });
   if (p.twitter) meta.push({ text: `@${p.twitter}`, href: `https://twitter.com/${p.twitter}` });
-  meta.push({
-    text: `github.com/${p.login}`,
-    href: `https://github.com/${p.login}`,
-  });
+  meta.push({ text: `github.com/${p.login}`, href: `https://github.com/${p.login}` });
 
   return (
     <View style={styles.header} wrap={false}>
@@ -161,7 +186,6 @@ function Languages({
   if (data.languages.length === 0) return null;
 
   const useAccent = theme.languageBarStyle === 'accent';
-  // Stepped opacities so the cobalt bar reads as differentiated bands.
   const opacityFor = (i: number, total: number) => 1 - (i / Math.max(1, total)) * 0.55;
 
   return (

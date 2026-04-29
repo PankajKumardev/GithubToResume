@@ -5,6 +5,7 @@ export function makeStyles(theme: ThemeTokens) {
   const c = theme.colors;
   const t = theme.type;
   const s = theme.spacing;
+  const isGrid = theme.borderedSections;
 
   return StyleSheet.create({
     page: {
@@ -23,11 +24,23 @@ export function makeStyles(theme: ThemeTokens) {
     },
     leftCol: {
       width: 170,
-      gap: s.section,
+      gap: theme.layout === 'two-column' ? s.section : 0,
     },
     rightCol: {
       flex: 1,
-      gap: s.section,
+      gap: theme.layout === 'two-column' ? s.section : 0,
+    },
+    body: {
+      flexDirection: 'column',
+      gap: isGrid ? 0 : s.section,
+    },
+
+    /* Section box (grid theme) */
+    sectionBox: {
+      borderWidth: theme.rules.weight,
+      borderColor: c.rule,
+      padding: 8,
+      marginTop: -theme.rules.weight,
     },
 
     /* Header */
@@ -35,11 +48,18 @@ export function makeStyles(theme: ThemeTokens) {
       flexDirection: 'row',
       gap: 12,
       alignItems: 'flex-start',
+      ...(isGrid
+        ? {
+            borderWidth: theme.rules.weight,
+            borderColor: c.rule,
+            padding: 10,
+          }
+        : {}),
     },
     avatar: {
       width: 56,
       height: 56,
-      borderRadius: 28,
+      borderRadius: theme.id === 'editorial' ? 28 : 0,
     },
     headerText: { flex: 1, gap: 2 },
     name: {
@@ -47,8 +67,8 @@ export function makeStyles(theme: ThemeTokens) {
       fontSize: t.name,
       fontWeight: 600,
       color: c.textPrimary,
-      lineHeight: 1.15,
-      letterSpacing: theme.id === 'mono' ? 0 : -0.4,
+      lineHeight: 1.05,
+      letterSpacing: theme.id === 'terminal' ? 0 : -0.6,
     },
     login: {
       fontSize: t.small,
@@ -75,14 +95,22 @@ export function makeStyles(theme: ThemeTokens) {
       fontStyle: 'italic',
       color: c.textPrimary,
       lineHeight: 1.45,
+      ...(isGrid
+        ? {
+            borderWidth: theme.rules.weight,
+            borderColor: c.rule,
+            padding: 10,
+            marginTop: -theme.rules.weight,
+          }
+        : {}),
     },
 
     /* Section title */
     sectionTitle: {
       fontFamily: theme.fonts.heading,
       fontSize: t.section,
-      fontWeight: theme.id === 'mono' ? 500 : 600,
-      letterSpacing: theme.id === 'mono' ? 0 : 1.4,
+      fontWeight: theme.id === 'terminal' ? 500 : 600,
+      letterSpacing: theme.id === 'terminal' ? 0 : 1.6,
       textTransform: 'uppercase',
       color: c.textPrimary,
       marginBottom: 6,
@@ -91,7 +119,7 @@ export function makeStyles(theme: ThemeTokens) {
       fontFamily: theme.fonts.heading,
       fontSize: t.section,
       fontWeight: 600,
-      letterSpacing: 1.4,
+      letterSpacing: 1.6,
       textTransform: 'uppercase',
       color: c.textPrimary,
       marginBottom: 6,
@@ -104,9 +132,18 @@ export function makeStyles(theme: ThemeTokens) {
     statsRow: {
       flexDirection: 'row',
       gap: 6,
-      paddingTop: 8,
-      borderTopWidth: theme.rules.weight,
-      borderTopColor: c.rule,
+      ...(isGrid
+        ? {
+            borderWidth: theme.rules.weight,
+            borderColor: c.rule,
+            padding: 10,
+            marginTop: -theme.rules.weight,
+          }
+        : {
+            paddingTop: 8,
+            borderTopWidth: theme.rules.weight,
+            borderTopColor: c.rule,
+          }),
     },
     statBox: {
       flex: 1,
@@ -131,7 +168,6 @@ export function makeStyles(theme: ThemeTokens) {
       flexDirection: 'row',
       width: '100%',
       height: 5,
-      borderRadius: 3,
       overflow: 'hidden',
       marginBottom: 6,
       backgroundColor: c.chipBg,
@@ -148,7 +184,7 @@ export function makeStyles(theme: ThemeTokens) {
       alignItems: 'center',
       gap: 3,
     },
-    swatch: { width: 5, height: 5, borderRadius: 2.5 },
+    swatch: { width: 5, height: 5, borderRadius: 0 },
 
     /* Repo cards */
     pinnedGrid: {
@@ -160,7 +196,7 @@ export function makeStyles(theme: ThemeTokens) {
       width: '49%',
       borderWidth: theme.rules.weight,
       borderColor: c.rule,
-      borderRadius: theme.id === 'mono' ? 0 : 4,
+      borderRadius: 0,
       padding: 7,
       gap: 3,
     },
@@ -184,7 +220,7 @@ export function makeStyles(theme: ThemeTokens) {
       color: c.textPrimary,
     },
 
-    /* Top repos list */
+    /* Top repos */
     topRepoRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -212,9 +248,9 @@ export function makeStyles(theme: ThemeTokens) {
       backgroundColor: c.chipBg,
       paddingVertical: 2,
       paddingHorizontal: 4,
-      borderRadius: theme.id === 'mono' ? 0 : 3,
+      borderRadius: 0,
     },
-    orgAvatar: { width: 10, height: 10, borderRadius: 2 },
+    orgAvatar: { width: 10, height: 10, borderRadius: 0 },
     orgName: { fontSize: t.small, color: c.chipText, fontWeight: 500 },
 
     /* Footer */

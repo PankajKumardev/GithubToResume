@@ -1,18 +1,17 @@
 import type { CSSProperties } from 'react';
 import type { ThemeId, ThemeTokens } from './tokens';
-import { minimal } from './minimal';
+import { grid } from './grid';
 import { editorial } from './editorial';
-import { mono } from './mono';
+import { terminal } from './terminal';
 
 export const themes: Record<ThemeId, ThemeTokens> = {
-  minimal,
+  grid,
   editorial,
-  mono,
+  terminal,
 };
 
-export const themeList: ThemeTokens[] = [minimal, editorial, mono];
+export const themeList: ThemeTokens[] = [grid, editorial, terminal];
 
-/** Wires theme tokens into CSS variables for the on-screen renderer. */
 export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   return {
     ['--theme-bg' as string]: theme.colors.bg,
@@ -28,7 +27,6 @@ export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   };
 }
 
-/** Format a section label per theme — e.g. mono adds [ BRACKETS ]. */
 export function formatSectionTitle(theme: ThemeTokens, label: string): string {
   const upper = label.toUpperCase();
   return theme.bracketSectionTitles ? `[ ${upper} ]` : upper;

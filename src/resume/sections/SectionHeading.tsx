@@ -15,7 +15,7 @@ export function SectionHeading({
   return (
     <h2
       className={cn(
-        'text-[11px] font-semibold uppercase',
+        'text-[10px] font-semibold uppercase',
         theme.bracketSectionTitles ? 'tracking-normal' : 'tracking-[0.18em]',
         theme.topRuleSections && 'border-t pt-2',
         className,

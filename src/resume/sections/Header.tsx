@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/format';
 
 export function HeaderSection({ data, theme }: { data: ResumeData; theme: ThemeTokens }) {
   const p = data.profile;
-  const isMono = theme.id === 'mono';
+  const isMono = theme.id === 'terminal';
   return (
     <header className="flex items-start gap-5">
       <img

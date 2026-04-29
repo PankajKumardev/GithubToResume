@@ -1,15 +1,6 @@
-import { motion } from 'framer-motion';
-import { LayoutTemplate, BookOpen, TerminalSquare } from 'lucide-react';
 import { themeList, type ThemeId } from '@/resume/themes';
 import { usePrefsStore } from '@/store/prefsStore';
 import { cn } from '@/lib/format';
-import { springSnap } from '@/lib/motion';
-
-const ICONS: Record<ThemeId, React.ComponentType<{ className?: string }>> = {
-  minimal: LayoutTemplate,
-  editorial: BookOpen,
-  mono: TerminalSquare,
-};
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = usePrefsStore();
@@ -17,33 +8,28 @@ export function ThemeSwitcher() {
     <div
       role="tablist"
       aria-label="Theme"
-      className="relative inline-flex items-center gap-0.5 rounded-lg border border-app-border bg-app-surface p-0.5"
+      className="hidden items-center gap-2 border border-app-border bg-app-bg px-1 py-0.5 font-mono text-[10px] uppercase tracking-widest sm:inline-flex"
     >
-      {themeList.map((t) => {
-        const Icon = ICONS[t.id];
-        const active = theme === t.id;
+      {themeList.map((t, i) => {
+        const active = theme === (t.id as ThemeId);
         return (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={active}
-            onClick={() => setTheme(t.id)}
-            title={`${t.label} — ${t.description}`}
-            className={cn(
-              'relative inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs transition-colors',
-              active ? 'text-app-primary' : 'text-app-muted hover:text-app-primary',
-            )}
-          >
-            {active && (
-              <motion.div
-                layoutId="active-theme-tab"
-                transition={springSnap}
-                className="absolute inset-0 rounded-md bg-white shadow-soft ring-1 ring-app-border-strong"
-              />
-            )}
-            <Icon className="relative h-3.5 w-3.5" />
-            <span className="relative hidden md:inline">{t.label}</span>
-          </button>
+          <span key={t.id} className="contents">
+            <button
+              role="tab"
+              aria-selected={active}
+              onClick={() => setTheme(t.id)}
+              title={`${t.label} — ${t.description}`}
+              className={cn(
+                'px-1.5 py-1 transition-colors',
+                active
+                  ? 'text-app-accent'
+                  : 'text-app-muted hover:text-app-primary',
+              )}
+            >
+              [ {t.label} ]
+            </button>
+            {i < themeList.length - 1 && <span className="text-app-border">|</span>}
+          </span>
         );
       })}
     </div>

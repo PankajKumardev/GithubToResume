@@ -18,7 +18,7 @@ export function OrgsSection({ data, theme }: { data: ResumeData; theme: ThemeTok
               style={{
                 background: 'var(--theme-chip-bg)',
                 color: 'var(--theme-chip-text)',
-                borderRadius: theme.id === 'mono' ? 0 : 6,
+                borderRadius: 0,
               }}
               title={org.name ?? org.login}
             >

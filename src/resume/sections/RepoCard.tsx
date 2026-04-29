@@ -1,14 +1,13 @@
 import { GitFork, Star } from 'lucide-react';
 import type { Repo } from '@/resume/types';
-import type { ThemeTokens } from '@/resume/themes';
 
-export function RepoCard({ repo, theme }: { repo: Repo; theme: ThemeTokens }) {
+export function RepoCard({ repo }: { repo: Repo }) {
   return (
     <div
       className="flex h-full flex-col gap-1.5 p-3"
       style={{
         border: '1px solid var(--theme-rule)',
-        borderRadius: theme.id === 'mono' ? 0 : 6,
+        borderRadius: 0,
       }}
     >
       <div className="flex items-start justify-between gap-2">

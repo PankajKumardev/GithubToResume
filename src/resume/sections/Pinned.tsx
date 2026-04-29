@@ -10,7 +10,7 @@ export function PinnedSection({ data, theme }: { data: ResumeData; theme: ThemeT
       <SectionHeading theme={theme} label="Pinned Projects" />
       <div className="mt-2 grid grid-cols-2 gap-2">
         {data.pinned.map((repo) => (
-          <RepoCard key={repo.fullName} repo={repo} theme={theme} />
+          <RepoCard key={repo.fullName} repo={repo} />
         ))}
       </div>
     </section>
