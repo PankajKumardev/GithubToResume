@@ -14,7 +14,6 @@ interface Props {
 
 export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props) {
   const styles = makeStyles(theme);
-  const isTwoCol = theme.layout === 'two-column';
 
   return (
     <Document
@@ -28,42 +27,12 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
         <Header data={data} avatarDataUrl={avatarDataUrl} styles={styles} />
         {data.profile.bio ? <Text style={styles.bio}>{data.profile.bio}</Text> : null}
         <Stats data={data} styles={styles} />
-
-        {isTwoCol ? (
-          <View style={[styles.columns, { marginTop: theme.spacing.section }]}>
-            <View style={styles.leftCol}>
-              <SectionBlock theme={theme} styles={styles}>
-                <Languages data={data} theme={theme} styles={styles} />
-              </SectionBlock>
-              <SectionBlock theme={theme} styles={styles}>
-                <Orgs data={data} theme={theme} styles={styles} />
-              </SectionBlock>
-            </View>
-            <View style={styles.rightCol}>
-              <SectionBlock theme={theme} styles={styles}>
-                <Pinned data={data} theme={theme} styles={styles} />
-              </SectionBlock>
-              <SectionBlock theme={theme} styles={styles}>
-                <TopRepos data={data} theme={theme} styles={styles} />
-              </SectionBlock>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.body}>
-            <SectionBlock theme={theme} styles={styles}>
-              <Languages data={data} theme={theme} styles={styles} />
-            </SectionBlock>
-            <SectionBlock theme={theme} styles={styles}>
-              <Pinned data={data} theme={theme} styles={styles} />
-            </SectionBlock>
-            <SectionBlock theme={theme} styles={styles}>
-              <TopRepos data={data} theme={theme} styles={styles} />
-            </SectionBlock>
-            <SectionBlock theme={theme} styles={styles}>
-              <Orgs data={data} theme={theme} styles={styles} />
-            </SectionBlock>
-          </View>
-        )}
+        <View style={styles.body}>
+          <Languages data={data} theme={theme} styles={styles} />
+          <Pinned data={data} theme={theme} styles={styles} />
+          <TopRepos data={data} theme={theme} styles={styles} />
+          <Orgs data={data} theme={theme} styles={styles} />
+        </View>
 
         <View fixed style={styles.footer}>
           <Text>
@@ -78,21 +47,6 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
 
 /* -------------------------------------------------------------------------- */
 
-function SectionBlock({
-  theme,
-  styles,
-  children,
-}: {
-  theme: ThemeTokens;
-  styles: ThemedStyles;
-  children: React.ReactNode;
-}) {
-  if (theme.borderedSections) {
-    return <View style={styles.sectionBox}>{children}</View>;
-  }
-  return <View>{children}</View>;
-}
-
 function SectionTitle({
   theme,
   styles,
@@ -102,9 +56,7 @@ function SectionTitle({
   styles: ThemedStyles;
   label: string;
 }) {
-  const text = formatSectionTitle(theme, label);
-  const style = theme.topRuleSections ? styles.sectionTitleTopRule : styles.sectionTitle;
-  return <Text style={style}>{text}</Text>;
+  return <Text style={styles.sectionTitle}>{formatSectionTitle(theme, label)}</Text>;
 }
 
 function Header({
@@ -185,7 +137,7 @@ function Languages({
 }) {
   if (data.languages.length === 0) return null;
 
-  const useAccent = theme.languageBarStyle === 'accent';
+  const useAccent = theme.variant.languageBarStyle === 'accent';
   const opacityFor = (i: number, total: number) => 1 - (i / Math.max(1, total)) * 0.55;
 
   return (
@@ -249,9 +201,7 @@ function Pinned({
             ) : null}
             {repo.primaryLanguage ? (
               <View style={styles.repoMeta}>
-                <View
-                  style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }}
-                />
+                <View style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }} />
                 <Text>{repo.primaryLanguage.name}</Text>
               </View>
             ) : null}
@@ -291,9 +241,7 @@ function TopRepos({
             <View style={styles.topRepoMeta}>
               {repo.primaryLanguage ? (
                 <View style={styles.repoMeta}>
-                  <View
-                    style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }}
-                  />
+                  <View style={{ ...styles.swatch, backgroundColor: repo.primaryLanguage.color }} />
                   <Text>{repo.primaryLanguage.name}</Text>
                 </View>
               ) : null}

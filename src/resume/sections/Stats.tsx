@@ -23,20 +23,24 @@ export function StatsSection({ data }: { data: ResumeData }) {
   };
   return (
     <ul
-      className="grid grid-cols-7 gap-2"
-      style={{ borderTop: '1px solid var(--theme-rule)', paddingTop: 10 }}
+      className="grid grid-cols-7 gap-2 pt-3"
+      style={{ borderTop: '1px solid var(--theme-rule)' }}
     >
       {ITEMS.map((item) => (
         <li key={item.key} className="min-w-0">
           <div
-            className="truncate text-[10px] uppercase tracking-wider"
+            className="truncate text-[10px] font-medium uppercase tracking-wider"
             style={{ color: 'var(--theme-text-muted)' }}
           >
             {item.label}
           </div>
           <div
-            className="mt-0.5 text-base font-semibold tabular-nums"
-            style={{ color: 'var(--theme-text-primary)', fontFamily: 'var(--theme-font-heading)' }}
+            className="mt-0.5 text-[17px] font-semibold tabular-nums"
+            style={{
+              color: 'var(--theme-text-primary)',
+              fontFamily: 'var(--theme-font-heading)',
+              letterSpacing: '-0.01em',
+            }}
           >
             {compactNumber(values[item.key])}
           </div>

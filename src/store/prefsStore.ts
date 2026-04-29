@@ -18,22 +18,26 @@ const MAX_RECENT = 6;
 
 const LEGACY_THEME_MAP: Record<string, ThemeId> = {
   // v1 ids
-  'modern-serif': 'grid',
-  'swiss-minimal': 'editorial',
-  'dev-terminal': 'terminal',
+  'modern-serif': 'minimal',
+  'swiss-minimal': 'executive',
+  'dev-terminal': 'developer',
   // v2 ids
-  minimal: 'grid',
-  mono: 'terminal',
+  minimal: 'minimal',
+  editorial: 'executive',
+  mono: 'developer',
+  // v3 ids (Swiss)
+  grid: 'minimal',
+  terminal: 'developer',
 };
 
 function isThemeId(v: unknown): v is ThemeId {
-  return v === 'grid' || v === 'editorial' || v === 'terminal';
+  return v === 'minimal' || v === 'executive' || v === 'developer';
 }
 
 export const usePrefsStore = create<PrefsState>()(
   persist(
     (set, get) => ({
-      theme: 'grid',
+      theme: 'minimal',
       paperSize: 'a4',
       recent: [],
       setTheme: (t) => set({ theme: t }),
@@ -53,7 +57,7 @@ export const usePrefsStore = create<PrefsState>()(
     {
       name: 'gh_prefs_v1',
       storage: createJSONStorage(() => localStorage),
-      version: 3,
+      version: 4,
       migrate: (persisted, _version) => {
         if (!persisted || typeof persisted !== 'object') return persisted as PrefsState;
         const obj = persisted as Record<string, unknown>;
@@ -61,7 +65,7 @@ export const usePrefsStore = create<PrefsState>()(
         if (typeof t === 'string' && t in LEGACY_THEME_MAP) {
           obj.theme = LEGACY_THEME_MAP[t];
         } else if (!isThemeId(t)) {
-          obj.theme = 'grid';
+          obj.theme = 'minimal';
         }
         return obj as unknown as PrefsState;
       },

@@ -1,16 +1,16 @@
 import type { CSSProperties } from 'react';
 import type { ThemeId, ThemeTokens } from './tokens';
-import { grid } from './grid';
-import { editorial } from './editorial';
-import { terminal } from './terminal';
+import { minimal } from './minimal';
+import { executive } from './executive';
+import { developer } from './developer';
 
 export const themes: Record<ThemeId, ThemeTokens> = {
-  grid,
-  editorial,
-  terminal,
+  minimal,
+  executive,
+  developer,
 };
 
-export const themeList: ThemeTokens[] = [grid, editorial, terminal];
+export const themeList: ThemeTokens[] = [minimal, executive, developer];
 
 export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   return {
@@ -27,9 +27,9 @@ export function cssVarsFor(theme: ThemeTokens): CSSProperties {
   };
 }
 
-export function formatSectionTitle(theme: ThemeTokens, label: string): string {
-  const upper = label.toUpperCase();
-  return theme.bracketSectionTitles ? `[ ${upper} ]` : upper;
+/** Section labels are uppercase across all current themes. */
+export function formatSectionTitle(_theme: ThemeTokens, label: string): string {
+  return label.toUpperCase();
 }
 
 export type { ThemeId, ThemeTokens } from './tokens';

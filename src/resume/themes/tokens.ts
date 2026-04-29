@@ -1,4 +1,4 @@
-export type ThemeId = 'grid' | 'editorial' | 'terminal';
+export type ThemeId = 'minimal' | 'executive' | 'developer';
 
 export interface ThemeTokens {
   id: ThemeId;
@@ -18,26 +18,30 @@ export interface ThemeTokens {
     body: string;
     mono: string;
   };
+  /** PDF-only spacing scale (points). 1pt = 1/72 inch. */
   spacing: {
     page: number;
     section: number;
     block: number;
     inline: number;
   };
+  /** PDF type scale (points). */
   type: {
     name: number;
     section: number;
     body: number;
     small: number;
   };
+  /** Hairline weight (pt) for rules and dividers. */
   rules: { weight: number };
-  layout: 'single' | 'two-column';
-  /** Wrap section titles in [ BRACKETS ]. */
-  bracketSectionTitles: boolean;
-  /** Render every section as a 1px-bordered box. */
-  borderedSections: boolean;
-  /** Render a 1px top border above each section title. */
-  topRuleSections: boolean;
-  /** Language stacked-bar style. */
-  languageBarStyle: 'spectrum' | 'accent';
+  variant: {
+    /** A 1px subtle rule above each section title (executive). */
+    sectionDividers: boolean;
+    /** Repo names rendered in mono font (developer). */
+    monoRepoNames: boolean;
+    /** Section titles + stat labels rendered in mono (developer). */
+    monoSectionLabels: boolean;
+    /** Single-accent stepped-opacity language bar (minimal) vs spectrum colors. */
+    languageBarStyle: 'spectrum' | 'accent';
+  };
 }
