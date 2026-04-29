@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Self-hosted fonts (also registered for PDF separately) ---------- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Inter-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Inter-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Inter-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Inter-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/IBMPlexSerif-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'IBM Plex Serif';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/IBMPlexSerif-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-Medium.ttf') format('truetype');
+}
+
+/* ---------- Default theme variables (Modern Serif fallback) ---------- */
+:root {
+  --theme-bg: #fdfcf8;
+  --theme-text-primary: #1c1c19;
+  --theme-text-muted: #78716c;
+  --theme-accent: #0f172a;
+  --theme-rule: #e7e5e0;
+  --theme-chip-bg: #f1efe7;
+  --theme-chip-text: #1c1c19;
+  --theme-font-heading: 'IBM Plex Serif', Georgia, serif;
+  --theme-font-body: 'Inter', system-ui, sans-serif;
+  --theme-font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme='modern-serif'] {
+  --theme-bg: #fdfcf8;
+  --theme-text-primary: #1c1c19;
+  --theme-text-muted: #78716c;
+  --theme-accent: #0f172a;
+  --theme-rule: #e7e5e0;
+  --theme-chip-bg: #f1efe7;
+  --theme-chip-text: #1c1c19;
+  --theme-font-heading: 'IBM Plex Serif', Georgia, serif;
+  --theme-font-body: 'Inter', system-ui, sans-serif;
+  --theme-font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme='swiss-minimal'] {
+  --theme-bg: #ffffff;
+  --theme-text-primary: #000000;
+  --theme-text-muted: #888888;
+  --theme-accent: #0055ff;
+  --theme-rule: #e5e5e5;
+  --theme-chip-bg: #f3f4f6;
+  --theme-chip-text: #000000;
+  --theme-font-heading: 'Inter', system-ui, sans-serif;
+  --theme-font-body: 'Inter', system-ui, sans-serif;
+  --theme-font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme='dev-terminal'] {
+  --theme-bg: #f6f8fa;
+  --theme-text-primary: #24292f;
+  --theme-text-muted: #57606a;
+  --theme-accent: #0969da;
+  --theme-rule: #d0d7de;
+  --theme-chip-bg: #ddf4ff;
+  --theme-chip-text: #0969da;
+  --theme-font-heading: 'JetBrains Mono', monospace;
+  --theme-font-body: 'Inter', system-ui, sans-serif;
+  --theme-font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ---------- Base ---------- */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings:
+    'cv02' on,
+    'cv03' on,
+    'cv04' on,
+    'cv11' on;
+  background-color: #09090b;
+  color: #fafafa;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+#root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* App-shell scrollbar */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Subtle grid pattern for the home hero */
+.bg-grid {
+  background-image:
+    radial-gradient(circle at center, rgba(59, 130, 246, 0.06), transparent 60%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    32px 32px,
+    32px 32px;
+}
+
+/* Print: when user hits Print, render the on-screen resume page directly */
+@media print {
+  body {
+    background: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-clean {
+    box-shadow: none !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* Skeleton shimmer */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
