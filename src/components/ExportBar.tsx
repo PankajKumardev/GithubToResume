@@ -29,9 +29,14 @@ export function ExportBar({ data, theme }: Props) {
       setPhase('done');
       setTimeout(() => setPhase('idle'), 1800);
     } catch (err) {
+      // Surface the actual failure reason so users can self-diagnose. The
+      // generic "Failed — Retry" button keeps its title attribute set to the
+      // full message for hover, plus we log the error to the console.
+      // eslint-disable-next-line no-console
+      console.error('[GitHub Résumé] PDF download failed:', err);
       setPhase('error');
       setErrMsg(err instanceof Error ? err.message : 'Download failed');
-      setTimeout(() => setPhase('idle'), 3000);
+      setTimeout(() => setPhase('idle'), 5000);
     }
   }
 
@@ -46,7 +51,15 @@ export function ExportBar({ data, theme }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="relative flex items-center gap-1.5">
+      {phase === 'error' && errMsg && (
+        <div
+          role="alert"
+          className="absolute right-0 top-full z-50 mt-2 max-w-xs rounded-md border border-red-200 bg-red-50 px-3 py-2 font-mono text-[11px] text-red-700 shadow-cmd"
+        >
+          {errMsg}
+        </div>
+      )}
       <PaperToggle paperSize={paperSize} onChange={setPaperSize} />
 
       <button

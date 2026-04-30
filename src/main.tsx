@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Buffer } from 'buffer';
+import processShim from 'process';
 import App from './App';
 import './index.css';
 
-// `@react-pdf/renderer` references `Buffer` at runtime; expose the polyfill on
-// `window` so its image/font pipelines don't crash in the browser.
-if (typeof window !== 'undefined' && !window.Buffer) {
-  window.Buffer = Buffer;
+// `@react-pdf/renderer` references Node-style `Buffer` and `process` at
+// runtime. Expose polyfills on `window` so its image/font pipelines don't
+// crash in the browser. This is required for production builds on Vercel
+// where the bundler can't see the implicit globals.
+if (typeof window !== 'undefined') {
+  if (!window.Buffer) window.Buffer = Buffer;
+  if (!window.process) window.process = processShim;
 }
 
 const queryClient = new QueryClient({
