@@ -25,7 +25,9 @@ export function ResumeDocument({ data, theme, avatarDataUrl, paperSize }: Props)
     >
       <Page size={paperSize === 'a4' ? 'A4' : 'LETTER'} style={styles.page} wrap>
         <Header data={data} avatarDataUrl={avatarDataUrl} styles={styles} />
-        {data.profile.bio ? <Text style={styles.bio}>{data.profile.bio}</Text> : null}
+        {data.profile.bio ? (
+          <Text style={styles.bio}>{stripUnsupported(data.profile.bio)}</Text>
+        ) : null}
         <Stats data={data} styles={styles} />
         <View style={styles.body}>
           <Languages data={data} theme={theme} styles={styles} />
@@ -199,7 +201,7 @@ function Pinned({
               </Link>
               <View style={styles.repoMeta}>
                 <Text>★ {repo.stars}</Text>
-                <Text>⑂ {repo.forks}</Text>
+                {repo.forks > 0 ? <Text>{repo.forks} forks</Text> : null}
               </View>
             </View>
             {repo.description ? (
@@ -286,6 +288,18 @@ function Orgs({
 }
 
 function truncate(s: string, n: number): string {
-  if (s.length <= n) return s;
-  return s.slice(0, n - 1).trimEnd() + '…';
+  const cleaned = stripUnsupported(s);
+  if (cleaned.length <= n) return cleaned;
+  return cleaned.slice(0, n - 1).trimEnd() + '…';
+}
+
+/**
+ * Strip glyphs the bundled fonts (Geist / Geist Mono / Inter / IBM Plex
+ * Serif / JetBrains Mono) don't ship — primarily emoji and pictographs —
+ * before they're rendered into the PDF. Without this, characters like ⚡
+ * fall back to garbage glyphs (e.g. "¡").
+ */
+const UNSUPPORTED_RE = /[\p{Emoji_Presentation}\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}]/gu;
+function stripUnsupported(s: string): string {
+  return s.replace(UNSUPPORTED_RE, '').replace(/\s{2,}/g, ' ').trim();
 }

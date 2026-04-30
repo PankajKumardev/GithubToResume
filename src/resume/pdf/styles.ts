@@ -74,7 +74,7 @@ export function makeStyles(theme: ThemeTokens) {
       fontFamily: theme.fonts.heading,
       fontSize: t.section,
       fontWeight: 600,
-      letterSpacing: 1.2,
+      letterSpacing: 0.6,
       textTransform: 'uppercase',
       color: c.textPrimary,
       marginBottom: 8,
@@ -91,7 +91,7 @@ export function makeStyles(theme: ThemeTokens) {
     statBox: { flex: 1 },
     statLabel: {
       fontSize: 6.5,
-      letterSpacing: 1.0,
+      letterSpacing: 0.4,
       textTransform: 'uppercase',
       color: c.textMuted,
       fontFamily: theme.fonts.mono,
